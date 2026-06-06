@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多模态 RAG 文档问答系统 · 王珠峰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0e14;--bg2:#111420;--bg3:#161a28;--border:#1e2436;--border2:#252d42;--text:#eef0f6;--muted:#7a8299;--faint:#3a4055;--blue:#4d90f0;--green:#3ecf8e;--amber:#f0a940;--purple:#a78bfa;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;font-weight:300;line-height:1.6;}a{text-decoration:none;color:inherit;}
+nav{position:sticky;top:0;z-index:100;background:rgba(12,14,20,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1080px;margin:0 auto;padding:0 2.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.back-link{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.06em;color:var(--muted);transition:color 0.2s;}
+.back-link:hover{color:var(--green);}
+.back-link::before{content:'←';}
+.nav-proj{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--faint);}
+.proj-hero{max-width:1080px;margin:0 auto;padding:5rem 2.5rem 4rem;border-bottom:1px solid var(--border);}
+.proj-category{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--green);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.8rem;}
+.proj-category::before{content:'';width:20px;height:1px;background:var(--green);}
+.proj-title{font-family:'Noto Serif SC',serif;font-size:clamp(2rem,4.5vw,3.2rem);font-weight:900;line-height:1.15;color:var(--text);margin-bottom:0.7rem;}
+.proj-en{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--faint);margin-bottom:2rem;}
+.proj-desc{font-size:0.96rem;color:var(--muted);line-height:1.85;font-weight:300;margin-bottom:2.5rem;max-width:760px;}
+.proj-desc strong{color:var(--text);font-weight:500;}
+.meta-row{display:flex;flex-wrap:wrap;gap:2rem;}
+.meta-label{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--faint);margin-bottom:0.3rem;}
+.meta-val{font-size:0.9rem;color:var(--text);font-weight:400;}
+.section{max-width:1080px;margin:0 auto;padding:4rem 2.5rem;border-bottom:1px solid var(--border);}
+.sec-title{font-family:'Noto Serif SC',serif;font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:0.5rem;}
+.sec-sub{font-size:0.88rem;color:var(--muted);margin-bottom:2rem;line-height:1.7;}
+.sub-title{font-family:'Noto Serif SC',serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:0.9rem;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;}
+.body-text{font-size:0.88rem;color:var(--muted);line-height:1.85;font-weight:300;}
+.body-text strong{color:var(--text);font-weight:500;}
+.body-text p{margin-bottom:0.9rem;}
+.body-text p:last-child{margin-bottom:0;}
+.body-text ul{list-style:none;padding:0;}
+.body-text li{padding:0.5rem 0;border-bottom:1px solid var(--border);display:flex;gap:0.8rem;font-size:0.86rem;color:var(--muted);}
+.body-text li:last-child{border-bottom:none;}
+.body-text li::before{content:'—';color:var(--green);flex-shrink:0;}
+
+/* RAG DEMO */
+.rag-demo{background:#0a0d14;display:grid;grid-template-columns:220px 1fr;min-height:500px;}
+.rag-sidebar{background:#0d1018;border-right:1px solid #1a2030;padding:14px;}
+.rs-title{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:1rem;}
+.rs-doc{background:#111820;border:1px solid #1a2535;border-radius:5px;padding:8px 10px;margin-bottom:6px;cursor:pointer;}
+.rs-doc:hover{border-color:var(--green);}
+.rs-doc-name{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--text);margin-bottom:2px;}
+.rs-doc-meta{font-size:0.62rem;color:var(--faint);}
+.rs-doc.active{border-color:var(--green);background:rgba(62,207,142,0.05);}
+.rs-sec{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--faint);margin:0.8rem 0 0.4rem;}
+
+.rag-main{display:flex;flex-direction:column;}
+.rag-topbar{background:#0d1018;border-bottom:1px solid #1a2030;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+.rag-topbar-title{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--text);}
+.rag-config{display:flex;gap:8px;align-items:center;}
+.config-pill{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;padding:2px 8px;border-radius:3px;border:1px solid;}
+.cp-hybrid{color:var(--blue);border-color:rgba(77,144,240,0.3);background:rgba(77,144,240,0.08);}
+.cp-rerank{color:var(--green);border-color:rgba(62,207,142,0.3);background:rgba(62,207,142,0.08);}
+.cp-model{color:var(--purple);border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.08);}
+
+.chat-area{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+.msg{display:flex;gap:10px;max-width:90%;}
+.msg.user{align-self:flex-end;flex-direction:row-reverse;}
+.msg-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.av-user{background:rgba(77,144,240,0.2);border:1px solid rgba(77,144,240,0.3);}
+.av-ai{background:rgba(62,207,142,0.15);border:1px solid rgba(62,207,142,0.25);}
+.msg-bubble{padding:10px 13px;border-radius:8px;font-size:0.82rem;line-height:1.6;}
+.mb-user{background:rgba(77,144,240,0.12);border:1px solid rgba(77,144,240,0.2);color:var(--text);}
+.mb-ai{background:#111820;border:1px solid #1a2535;color:var(--muted);}
+.mb-ai strong{color:var(--text);}
+.source-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.src{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;padding:2px 7px;background:rgba(62,207,142,0.08);border:1px solid rgba(62,207,142,0.2);color:var(--green);border-radius:3px;}
+.score{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--faint);margin-left:4px;}
+.retrieval-info{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--faint);padding:6px 10px;background:#080a10;border-top:1px solid #1a2030;display:flex;gap:1.5rem;}
+.ri-item{display:flex;align-items:center;gap:4px;}
+.ri-label{color:var(--faint);}
+.ri-val{color:var(--blue);}
+
+.chat-input-row{border-top:1px solid #1a2030;padding:10px 16px;display:flex;gap:8px;background:#0d1018;}
+.chat-input{flex:1;background:#111820;border:1px solid #1a2535;border-radius:5px;padding:8px 12px;font-size:0.82rem;color:var(--text);font-family:'Noto Sans SC',sans-serif;outline:none;}
+.chat-input:focus{border-color:var(--green);}
+.send-btn{background:var(--green);color:#0a0d14;font-size:0.78rem;font-weight:500;padding:8px 16px;border:none;border-radius:5px;cursor:pointer;font-family:'Noto Sans SC',sans-serif;}
+
+/* PIPELINE */
+.pipeline{display:flex;align-items:stretch;gap:0;overflow-x:auto;margin-top:1rem;}
+.pl-phase{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.2rem;flex:1;min-width:140px;position:relative;}
+.pl-phase + .pl-phase{margin-left:8px;}
+.pl-num{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--faint);margin-bottom:0.5rem;}
+.pl-name{font-size:0.9rem;font-weight:500;color:var(--text);margin-bottom:0.6rem;}
+.pl-items{font-size:0.78rem;color:var(--muted);line-height:1.7;}
+.pl-items strong{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--green);}
+.pl-arrow{position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:1.1rem;z-index:1;}
+
+.eval-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem;}
+.eval-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.2rem;}
+.eval-metric{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);margin-bottom:0.4rem;}
+.eval-val{font-family:'Noto Serif SC',serif;font-size:1.8rem;font-weight:900;color:var(--green);line-height:1;margin-bottom:0.3rem;}
+.eval-desc{font-size:0.78rem;color:var(--muted);}
+
+.tech-stack{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem;}
+.tc{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:0.35rem 0.85rem;background:rgba(62,207,142,0.08);border:1px solid rgba(62,207,142,0.2);color:var(--green);border-radius:4px;}
+.outcome-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem;}
+.oc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.2rem;}
+.oc-num{font-family:'Noto Serif SC',serif;font-size:1.8rem;font-weight:900;color:var(--green);line-height:1;margin-bottom:0.35rem;}
+.oc-label{font-size:0.8rem;color:var(--muted);font-weight:300;}
+footer{max-width:1080px;margin:0 auto;padding:1.8rem 2.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.8rem;}
+.ft-copy{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--faint);}
+.ft-nav{display:flex;gap:2rem;}
+.ft-nav a{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);transition:color 0.2s;}
+.ft-nav a:hover{color:var(--green);}
+@media(max-width:720px){.proj-hero,.section{padding:3rem 1.5rem;}.two-col{grid-template-columns:1fr;gap:2rem;}.outcome-grid,.eval-grid{grid-template-columns:repeat(2,1fr);}.rag-demo{grid-template-columns:1fr;}.rag-sidebar{display:none;}.pipeline{flex-direction:column;}.pl-phase+.pl-phase{margin-left:0;margin-top:8px;}.pl-arrow{display:none;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a class="back-link" href="index.html">返回主页</a>
+    <span class="nav-proj">王珠峰 · 项目详情</span>
+  </div>
+</nav>
+
+<div class="proj-hero">
+  <div class="proj-category">AI 工程 · RAG · 个人项目</div>
+  <h1 class="proj-title">多模态 RAG<br>文档问答系统</h1>
+  <p class="proj-en">Multimodal RAG Document Q&A System over a Personal Knowledge Base</p>
+  <p class="proj-desc">
+    面向个人 / 政务文档知识管理场景，支持 <strong>PDF / Markdown / 图片</strong>多源知识，搭建「离线建索引 → 在线检索 → 效果评测」全链路。采用 <strong>BM25 + 稠密向量混合检索</strong>并加入 Rerank 精排，结合 OCR / VLM 处理图文混排文档；基于 RAGAS、Hit@k / MRR 量化评测切分与召回策略，迭代提升问答准确率。
+  </p>
+  <div class="meta-row">
+    <div><div class="meta-label">类型</div><div class="meta-val">个人项目</div></div>
+    <div><div class="meta-label">时间</div><div class="meta-val">2026.03 — 2026.05</div></div>
+    <div><div class="meta-label">场景</div><div class="meta-val">个人 / 政务文档知识管理</div></div>
+    <div><div class="meta-label">核心技术</div><div class="meta-val">RAG 全链路 · 混合检索 · 多模态</div></div>
+  </div>
+</div>
+
+<!-- DEMO -->
+<div class="section">
+  <h2 class="sec-title">系统 Demo · 交互问答</h2>
+  <p class="sec-sub">以下为 RAG 知识库问答系统界面演示，展示混合检索（BM25 + 稠密向量）、Rerank 精排和来源引用功能。顶栏显示当前检索配置，每条回答附带检索来源和相关性分数。</p>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.4);">
+    <div style="background:var(--bg3);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;gap:6px;"><div style="width:10px;height:10px;border-radius:50%;background:#f87171;opacity:0.7;"></div><div style="width:10px;height:10px;border-radius:50%;background:#f0a940;opacity:0.7;"></div><div style="width:10px;height:10px;border-radius:50%;background:#3ecf8e;opacity:0.7;"></div></div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);">RAG Knowledge Base · Personal Documents</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--green);">READY</div>
+    </div>
+    <div class="rag-demo">
+      <div class="rag-sidebar">
+        <div class="rs-title">Knowledge Base</div>
+        <div class="rs-doc active">
+          <div class="rs-doc-name">📄 annual_report_2025.pdf</div>
+          <div class="rs-doc-meta">PDF · 48页 · 已索引</div>
+        </div>
+        <div class="rs-doc">
+          <div class="rs-doc-name">📝 policy_guidelines.md</div>
+          <div class="rs-doc-meta">Markdown · 已索引</div>
+        </div>
+        <div class="rs-doc">
+          <div class="rs-doc-name">🖼️ org_chart_2026.png</div>
+          <div class="rs-doc-meta">图片 · OCR · 已索引</div>
+        </div>
+        <div class="rs-doc">
+          <div class="rs-doc-name">📄 budget_overview.pdf</div>
+          <div class="rs-doc-meta">PDF · 12页 · 已索引</div>
+        </div>
+        <div class="rs-sec">检索配置</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--faint);line-height:1.8;">
+          <div>Chunk: 512 tokens</div>
+          <div>Overlap: 64 tokens</div>
+          <div>BM25 weight: 0.4</div>
+          <div>Dense weight: 0.6</div>
+          <div>Rerank top-k: 5</div>
+        </div>
+        <div class="rs-sec">索引统计</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--faint);line-height:1.8;">
+          <div>总文档: 4</div>
+          <div>总chunks: 312</div>
+          <div>向量维度: 768</div>
+        </div>
+      </div>
+      <div class="rag-main">
+        <div class="rag-topbar">
+          <div class="rag-topbar-title">Document Q&A · Hybrid Retrieval</div>
+          <div class="rag-config">
+            <div class="config-pill cp-hybrid">BM25 + Dense</div>
+            <div class="config-pill cp-rerank">Rerank ✓</div>
+            <div class="config-pill cp-model">GPT-4o-mini</div>
+          </div>
+        </div>
+        <div class="chat-area">
+          <div class="msg user">
+            <div class="msg-avatar av-user">👤</div>
+            <div class="msg-bubble mb-user">2025年度报告中，营收同比增长了多少？</div>
+          </div>
+          <div class="msg">
+            <div class="msg-avatar av-ai">🤖</div>
+            <div>
+              <div class="msg-bubble mb-ai">根据 <strong>annual_report_2025.pdf</strong> 第14页的财务摘要，2025年全年营收较2024年同比增长 <strong>23.4%</strong>，达到 <strong>18.7亿元</strong>。其中Q4表现尤为突出，单季度同比增速达到31.2%，主要受益于新产品线的规模化推进。<div class="source-chips"><span class="src">annual_report_2025.pdf · p.14</span><span class="score">score: 0.94</span><span class="src">annual_report_2025.pdf · p.8</span><span class="score">score: 0.87</span></div></div>
+            </div>
+          </div>
+          <div class="msg user">
+            <div class="msg-avatar av-user">👤</div>
+            <div class="msg-bubble mb-user">组织架构图里，技术部门负责人是谁？</div>
+          </div>
+          <div class="msg">
+            <div class="msg-avatar av-ai">🤖</div>
+            <div>
+              <div class="msg-bubble mb-ai">根据 <strong>org_chart_2026.png</strong>（OCR提取），技术部门现任负责人为<strong>李明远</strong>（CTO），自2024年9月起任职。其下设三个子部门：研发中心、数据平台部、基础架构部，分别由张晓东、王芳、陈建国担任负责人。<div class="source-chips"><span class="src">org_chart_2026.png · OCR</span><span class="score">score: 0.91</span></div></div>
+            </div>
+          </div>
+          <div class="msg user">
+            <div class="msg-avatar av-user">👤</div>
+            <div class="msg-bubble mb-user">政策文件中关于差旅报销的规定是什么？</div>
+          </div>
+          <div class="msg">
+            <div class="msg-avatar av-ai">🤖</div>
+            <div>
+              <div class="msg-bubble mb-ai">依据 <strong>policy_guidelines.md</strong> 第三章「费用管理」，差旅报销标准如下：国内出差住宿费用不超过 <strong>400元/晚</strong>（一线城市600元），交通以经济舱/高铁二等座为原则；超标需提前申请审批。报销需在出差结束后 <strong>5个工作日内</strong>提交凭证。<div class="source-chips"><span class="src">policy_guidelines.md · §3.2</span><span class="score">score: 0.96</span><span class="src">policy_guidelines.md · §3.4</span><span class="score">score: 0.82</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="retrieval-info">
+          <div class="ri-item"><span class="ri-label">检索策略：</span><span class="ri-val">BM25(0.4) + Dense(0.6) → Rerank</span></div>
+          <div class="ri-item"><span class="ri-label">召回chunks：</span><span class="ri-val">20 → Rerank → Top 5</span></div>
+          <div class="ri-item"><span class="ri-label">Hit@3：</span><span class="ri-val">0.87</span></div>
+          <div class="ri-item"><span class="ri-label">MRR：</span><span class="ri-val">0.81</span></div>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" placeholder="输入问题，按 Enter 发送..." readonly/>
+          <button class="send-btn">发送</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PIPELINE -->
+<div class="section">
+  <h2 class="sec-title">RAG 全链路设计</h2>
+  <p class="sec-sub">离线建索引与在线检索两阶段分离，支持多模态文档输入，检索策略经过量化评测迭代优化。</p>
+  <div class="pipeline">
+    <div class="pl-phase">
+      <div class="pl-num">01 · 文档解析</div>
+      <div class="pl-name">多源输入</div>
+      <div class="pl-items"><strong>PDF</strong>文本层提取<br><strong>Markdown</strong>结构保留<br><strong>图片</strong>OCR / VLM<br><strong>混排文档</strong>图文联合处理</div>
+      <div class="pl-arrow">→</div>
+    </div>
+    <div class="pl-phase">
+      <div class="pl-num">02 · 分块策略</div>
+      <div class="pl-name">Chunking</div>
+      <div class="pl-items"><strong>固定大小</strong>512 tokens<br><strong>重叠</strong>64 tokens<br><strong>语义分块</strong>按段落/标题<br>分块策略对比评测</div>
+      <div class="pl-arrow">→</div>
+    </div>
+    <div class="pl-phase">
+      <div class="pl-num">03 · 索引建立</div>
+      <div class="pl-name">Indexing</div>
+      <div class="pl-items"><strong>稠密向量</strong>Sentence Transformer<br><strong>Chroma</strong>向量数据库<br><strong>BM25</strong>倒排索引<br>离线预处理</div>
+      <div class="pl-arrow">→</div>
+    </div>
+    <div class="pl-phase">
+      <div class="pl-num">04 · 混合检索</div>
+      <div class="pl-name">Hybrid Retrieval</div>
+      <div class="pl-items"><strong>BM25</strong>稀疏权重 0.4<br><strong>Dense</strong>稠密权重 0.6<br><strong>RRF</strong>倒数排名融合<br>Top-20候选召回</div>
+      <div class="pl-arrow">→</div>
+    </div>
+    <div class="pl-phase">
+      <div class="pl-num">05 · 精排生成</div>
+      <div class="pl-name">Rerank + LLM</div>
+      <div class="pl-items"><strong>Cross-encoder</strong>Rerank Top-5<br><strong>LLM</strong>GPT-4o-mini<br><strong>引用</strong>来源追踪<br><strong>回答</strong>含置信度</div>
+    </div>
+  </div>
+</div>
+
+<!-- EVAL -->
+<div class="section">
+  <div class="two-col">
+    <div>
+      <div class="sub-title">量化评测体系</div>
+      <div class="body-text">
+        <p>基于 <strong>RAGAS 框架</strong>构建自动化评测流水线，覆盖召回质量（Hit@k / MRR）和生成质量（Answer Relevance / Faithfulness / Context Precision）。</p>
+        <p>通过系统性对比不同分块策略（固定大小 / 语义分块）和检索配置（BM25 only / Dense only / Hybrid），量化确定最优参数组合。</p>
+      </div>
+      <div class="eval-grid">
+        <div class="eval-card"><div class="eval-metric">Hit@3</div><div class="eval-val">0.87</div><div class="eval-desc">Top-3 召回命中率</div></div>
+        <div class="eval-card"><div class="eval-metric">MRR</div><div class="eval-val">0.81</div><div class="eval-desc">平均倒数排名</div></div>
+        <div class="eval-card"><div class="eval-metric">Faithfulness</div><div class="eval-val">0.93</div><div class="eval-desc">答案忠实度（RAGAS）</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="sub-title">关键技术决策</div>
+      <div class="body-text">
+        <ul>
+          <li><strong>混合检索优于纯向量：</strong>BM25 对精确关键词检索有天然优势，稠密向量捕捉语义相似性；RRF 融合在 Hit@3 上比纯向量提升约 12%</li>
+          <li><strong>Rerank 大幅提升精度：</strong>Cross-encoder Rerank 将 Top-20 精排为 Top-5，MRR 提升约 0.08</li>
+          <li><strong>OCR/VLM 打通图文壁垒：</strong>对包含图表的混排文档，VLM 描述路径比纯 OCR 检索准确率提升明显</li>
+          <li><strong>分块策略影响显著：</strong>512+64 重叠固定分块在本场景优于语义分块，因文档结构较规整</li>
+          <li><strong>Chroma 本地化部署：</strong>无需联网，适合政务文档隐私要求</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TECH + OUTCOME -->
+<div class="section">
+  <h2 class="sec-title" style="font-size:1.4rem;margin-bottom:1rem;">技术栈</h2>
+  <div class="tech-stack">
+    <span class="tc">Python</span><span class="tc">LangChain</span><span class="tc">Chroma</span>
+    <span class="tc">BM25 (rank_bm25)</span><span class="tc">Sentence Transformers</span><span class="tc">Cross-encoder Rerank</span>
+    <span class="tc">RAGAS 评测框架</span><span class="tc">Hit@k · MRR</span><span class="tc">OCR (Tesseract)</span>
+    <span class="tc">VLM 图文理解</span><span class="tc">FastAPI</span><span class="tc">GPT-4o-mini</span>
+  </div>
+  <h2 class="sec-title" style="font-size:1.4rem;margin-top:3rem;margin-bottom:0.5rem;">项目成果</h2>
+  <div class="outcome-grid">
+    <div class="oc"><div class="oc-num">全链路</div><div class="oc-label">离线建索引→在线检索→评测完整覆盖</div></div>
+    <div class="oc"><div class="oc-num">3种</div><div class="oc-label">文档类型支持：PDF / MD / 图片</div></div>
+    <div class="oc"><div class="oc-num">Hit@3<br>0.87</div><div class="oc-label">混合检索 + Rerank 量化评测</div></div>
+    <div class="oc"><div class="oc-num">本地</div><div class="oc-label">Chroma 完全离线部署，隐私安全</div></div>
+  </div>
+</div>
+
+<footer>
+  <span class="ft-copy">© 2026 王珠峰 · Zhufeng Wang</span>
+  <div class="ft-nav">
+    <a href="index.html">← 返回主页</a>
+    <a href="coal-mine.html">煤矿项目 →</a>
+  </div>
+</footer>
+</body>
+</html>

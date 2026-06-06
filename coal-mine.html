@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGMAS 煤矿气体监测系统 · 王珠峰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0e14;--bg2:#111420;--bg3:#161a28;--border:#1e2436;--border2:#252d42;--text:#eef0f6;--muted:#7a8299;--faint:#3a4055;--blue:#4d90f0;--green:#3ecf8e;--amber:#f0a940;--purple:#a78bfa;--red:#f87171;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;font-weight:300;line-height:1.6;}a{text-decoration:none;color:inherit;}
+nav{position:sticky;top:0;z-index:100;background:rgba(12,14,20,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1080px;margin:0 auto;padding:0 2.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.back-link{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.06em;color:var(--muted);transition:color 0.2s;}
+.back-link:hover{color:var(--amber);}
+.back-link::before{content:'←';font-size:0.9rem;}
+.nav-proj{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--faint);}
+.proj-hero{max-width:1080px;margin:0 auto;padding:5rem 2.5rem 4rem;border-bottom:1px solid var(--border);}
+.proj-category{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.8rem;}
+.proj-category::before{content:'';width:20px;height:1px;background:var(--amber);}
+.proj-title{font-family:'Noto Serif SC',serif;font-size:clamp(2rem,4.5vw,3.2rem);font-weight:900;line-height:1.15;color:var(--text);margin-bottom:0.7rem;}
+.proj-en{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--faint);margin-bottom:2rem;}
+.proj-desc{font-size:0.96rem;color:var(--muted);line-height:1.85;font-weight:300;margin-bottom:2.5rem;max-width:760px;}
+.proj-desc strong{color:var(--text);font-weight:500;}
+.meta-row{display:flex;flex-wrap:wrap;gap:2rem;}
+.meta-label{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--faint);margin-bottom:0.3rem;}
+.meta-val{font-size:0.9rem;color:var(--text);font-weight:400;}
+.section{max-width:1080px;margin:0 auto;padding:4rem 2.5rem;border-bottom:1px solid var(--border);}
+.sec-title{font-family:'Noto Serif SC',serif;font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:0.5rem;}
+.sec-sub{font-size:0.88rem;color:var(--muted);margin-bottom:2rem;line-height:1.7;}
+.sub-title{font-family:'Noto Serif SC',serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:0.9rem;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;}
+.body-text{font-size:0.88rem;color:var(--muted);line-height:1.85;font-weight:300;}
+.body-text strong{color:var(--text);font-weight:500;}
+.body-text p{margin-bottom:0.9rem;}
+.body-text p:last-child{margin-bottom:0;}
+.body-text ul{list-style:none;padding:0;}
+.body-text li{padding:0.5rem 0;border-bottom:1px solid var(--border);display:flex;gap:0.8rem;font-size:0.86rem;color:var(--muted);}
+.body-text li:last-child{border-bottom:none;}
+.body-text li::before{content:'—';color:var(--amber);flex-shrink:0;}
+
+/* LIVE DEMO */
+.demo-frame{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.4);}
+.demo-titlebar{background:var(--bg3);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+.demo-dots{display:flex;gap:6px;}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot-r{background:#f87171;opacity:0.7;}.dot-y{background:#f0a940;opacity:0.7;}.dot-g{background:#3ecf8e;opacity:0.7;}
+.demo-title-text{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.06em;}
+.demo-live{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--amber);display:flex;align-items:center;gap:5px;}
+.demo-live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--amber);animation:blink 2.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+
+/* UGMAS DASHBOARD */
+.ugmas{display:grid;grid-template-columns:160px 1fr;min-height:580px;background:#080b10;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#94a3b8;}
+.u-sidebar{background:#0d1018;border-right:1px solid #1a2030;padding:12px 0;display:flex;flex-direction:column;}
+.u-logo{padding:4px 12px 14px;border-bottom:1px solid #1a2030;margin-bottom:6px;}
+.u-logo-t{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#f0a940;font-weight:600;}
+.u-logo-s{font-size:7px;color:#3a4055;margin-top:2px;}
+.u-sec{font-size:7px;letter-spacing:0.12em;text-transform:uppercase;color:#2a3040;padding:8px 12px 3px;font-weight:600;}
+.u-item{display:flex;align-items:center;gap:6px;padding:5px 12px;font-size:9px;color:#6b7a99;cursor:pointer;transition:all 0.15s;}
+.u-item:hover{background:#141820;color:#e2e8f0;}
+.u-item.act{background:#1a1f2e;color:#f0a940;border-right:2px solid #f0a940;}
+.u-bullet{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:0.5;}
+.u-bot{margin-top:auto;padding:10px 12px;border-top:1px solid #1a2030;}
+.u-clock{font-size:10px;color:#3a4055;}
+.u-date{font-size:7px;color:#252d40;margin-top:2px;}
+.u-status{font-size:8px;color:#3ecf8e;margin-top:4px;display:flex;align-items:center;gap:4px;}
+.u-status::before{content:'';width:5px;height:5px;border-radius:50%;background:#3ecf8e;animation:blink 2s ease-in-out infinite;}
+
+.u-main{display:flex;flex-direction:column;overflow:hidden;}
+.u-topbar{background:#0d1018;border-bottom:1px solid #1a2030;padding:7px 14px;display:flex;align-items:center;justify-content:space-between;}
+.u-topbar-t{font-size:10px;font-weight:600;letter-spacing:0.04em;color:#e2e8f0;}
+.u-badges{display:flex;align-items:center;gap:8px;}
+.u-badge{font-size:7px;padding:2px 7px;border-radius:8px;font-weight:500;}
+.ub-ok{background:#0d2a1a;color:#3ecf8e;border:1px solid #065f46;}
+.ub-warn{background:#3b2000;color:#f0a940;border:1px solid #7a4000;}
+
+.u-content{flex:1;padding:10px;overflow-y:auto;background:#080b10;display:grid;grid-template-columns:1fr 1.6fr 1fr;grid-template-rows:auto 1fr;gap:8px;}
+
+/* Correlation panel */
+.corr-panel{background:#0d1018;border:1px solid #1a2030;border-radius:5px;padding:9px;}
+.cp-title{font-size:7px;letter-spacing:0.1em;text-transform:uppercase;color:#3a4055;margin-bottom:7px;font-weight:600;}
+.corr-cat{margin-bottom:6px;}
+.corr-cat-name{font-size:8px;color:#f0a940;margin-bottom:4px;font-weight:500;}
+.corr-items{}
+.ci{display:flex;align-items:center;gap:5px;padding:2px 0;font-size:7px;color:#6b7a99;}
+.ci-bar{height:3px;background:#1a2030;border-radius:1px;flex:1;overflow:hidden;}
+.ci-fill{height:100%;border-radius:1px;}
+.ci-val{font-size:7px;min-width:22px;text-align:right;}
+
+/* Mine map */
+.mine-map{background:#0d1018;border:1px solid #1a2030;border-radius:5px;padding:9px;grid-row:span 2;}
+.mm-title{font-size:7px;letter-spacing:0.1em;text-transform:uppercase;color:#3a4055;margin-bottom:8px;display:flex;justify-content:space-between;}
+.mine-svg-wrap{position:relative;width:100%;height:100%;min-height:200px;}
+
+/* Data packet */
+.data-panel{background:#0d1018;border:1px solid #1a2030;border-radius:5px;padding:9px;}
+.dp-title{font-size:7px;letter-spacing:0.1em;text-transform:uppercase;color:#3a4055;margin-bottom:7px;}
+.dp-row{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #111620;}
+.dp-row:last-child{border-bottom:none;}
+.dp-key{font-size:7px;color:#4a5568;}
+.dp-val{font-size:7px;color:#e2e8f0;font-weight:500;}
+.dp-val.hi{color:#f87171;}.dp-val.lo{color:#3ecf8e;}.dp-val.mid{color:#f0a940;}
+
+/* Status */
+.status-panel{background:#0d1018;border:1px solid #1a2030;border-radius:5px;padding:9px;}
+.sp-status{font-size:18px;font-weight:700;color:#3ecf8e;margin:6px 0;}
+.sp-label{font-size:7px;color:#3a4055;text-transform:uppercase;letter-spacing:0.1em;}
+.sp-alarms{font-size:8px;color:#3ecf8e;margin-top:4px;}
+
+/* Bubble wall */
+.bubble-panel{background:#0d1018;border:1px solid #1a2030;border-radius:5px;padding:9px;}
+.bp-title{font-size:7px;letter-spacing:0.1em;text-transform:uppercase;color:#3a4055;margin-bottom:6px;}
+.bubble-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.bubble-label{font-size:7px;color:#4a5568;width:40px;flex-shrink:0;}
+.bubble-viz{display:flex;align-items:center;gap:4px;flex:1;}
+.bub{border-radius:50%;display:inline-block;opacity:0.7;}
+
+/* Prediction charts */
+.pred-panel{background:#0d1018;border:1px solid #1a2030;border-radius:5px;padding:9px;grid-column:3;grid-row:span 2;}
+.pp-title{font-size:7px;letter-spacing:0.1em;text-transform:uppercase;color:#3a4055;margin-bottom:8px;}
+.pred-chart{margin-bottom:8px;}
+.pc-name{font-size:7px;color:#6b7a99;margin-bottom:3px;}
+.pc-bars{display:flex;align-items:flex-end;gap:1px;height:28px;}
+.pc-bar{flex:1;border-radius:1px 1px 0 0;}
+.pc-forecast{display:flex;align-items:flex-end;gap:1px;height:28px;opacity:0.4;}
+
+/* ITERATION timeline */
+.timeline{position:relative;padding-left:2rem;}
+.tl-line{position:absolute;left:0.4rem;top:0;bottom:0;width:2px;background:var(--border2);}
+.tl-item{position:relative;margin-bottom:2rem;}
+.tl-dot{position:absolute;left:-1.7rem;top:0.2rem;width:12px;height:12px;border-radius:50%;border:2px solid var(--amber);background:var(--bg);}
+.tl-item:last-child .tl-dot{background:var(--amber);}
+.tl-ver{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--amber);letter-spacing:0.1em;margin-bottom:0.3rem;}
+.tl-name{font-size:0.95rem;font-weight:500;color:var(--text);margin-bottom:0.5rem;}
+.tl-desc{font-size:0.84rem;color:var(--muted);line-height:1.7;font-weight:300;}
+
+/* TECH + OUTCOME */
+.tech-stack{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem;}
+.tc{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:0.35rem 0.85rem;background:rgba(240,169,64,0.08);border:1px solid rgba(240,169,64,0.2);color:var(--amber);border-radius:4px;}
+.outcome-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem;}
+.oc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.2rem;}
+.oc-num{font-family:'Noto Serif SC',serif;font-size:1.8rem;font-weight:900;color:var(--amber);line-height:1;margin-bottom:0.35rem;}
+.oc-label{font-size:0.8rem;color:var(--muted);font-weight:300;}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.2rem;text-align:center;}
+.stat-n{font-family:'Noto Serif SC',serif;font-size:1.6rem;font-weight:900;color:var(--green);margin-bottom:0.3rem;}
+.stat-l{font-size:0.78rem;color:var(--muted);}
+
+footer{max-width:1080px;margin:0 auto;padding:1.8rem 2.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.8rem;}
+.ft-copy{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--faint);}
+.ft-nav{display:flex;gap:2rem;}
+.ft-nav a{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);transition:color 0.2s;}
+.ft-nav a:hover{color:var(--amber);}
+@media(max-width:720px){.proj-hero,.section{padding:3rem 1.5rem;}.two-col{grid-template-columns:1fr;gap:2rem;}.outcome-grid,.stat-grid{grid-template-columns:repeat(2,1fr);}.u-sidebar{display:none;}.ugmas{grid-template-columns:1fr;}.u-content{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a class="back-link" href="index.html">返回主页</a>
+    <span class="nav-proj">王珠峰 · 项目详情</span>
+  </div>
+</nav>
+
+<div class="proj-hero">
+  <div class="proj-category">数据可视化 · 中兴集团 · 硕士毕业设计</div>
+  <h1 class="proj-title">UGMAS 煤矿气体<br>异常检测与预警系统</h1>
+  <p class="proj-en">Underground Mine Gas Monitoring & Analysis System — TCA/FSV/DMVN Visualization Framework</p>
+  <p class="proj-desc">
+    UTS 42003 工程毕业设计（历时一年），与中兴集团合作。基于真实矿井传感器数据集（12通道 · 5,749时间步），构建「三相关分析（TCA）+ 特征稳定性验证（FSV）+ 动态多变量网络可视化（DMVN）」全链路系统。从继承现有矩阵代码出发，历经三版迭代，最终交付具备<strong>空间定位矿井地图、气泡墙总览、LSTM一小时预测、实时告警</strong>的完整多面板仪表盘。导师：Robert Wu 博士。
+  </p>
+  <div class="meta-row">
+    <div><div class="meta-label">课程</div><div class="meta-val">UTS 42003 Engineering Graduate Project</div></div>
+    <div><div class="meta-label">合作方</div><div class="meta-val">中兴集团（ZhongXing Mine）</div></div>
+    <div><div class="meta-label">周期</div><div class="meta-val">2025.09 — 2026.05（一年）</div></div>
+    <div><div class="meta-label">导师</div><div class="meta-val">Dr. Robert Wu</div></div>
+    <div><div class="meta-label">角色</div><div class="meta-val">前端/全栈（独立完成）</div></div>
+  </div>
+</div>
+
+<!-- LIVE DEMO -->
+<div class="section">
+  <h2 class="sec-title">UGMAS 仪表盘 · 实时 Demo</h2>
+  <p class="sec-sub">以下为 UGMAS 最终版（Version 3）完整功能演示。四个核心面板：相关性分析面板、矿井空间地图、实时数据包、气泡墙总览及传感器预测图，时钟实时运行。</p>
+  <div class="demo-frame">
+    <div class="demo-titlebar">
+      <div class="demo-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+      <div class="demo-title-text">UGMAS — Underground Mine Gas Analysis System · ZhongXing Mine</div>
+      <div class="demo-live">MONITORING</div>
+    </div>
+    <div class="ugmas">
+      <div class="u-sidebar">
+        <div class="u-logo"><div class="u-logo-t">UGMAS</div><div class="u-logo-s">ZhongXing · Monitor</div></div>
+        <div class="u-sec">Analysis</div>
+        <div class="u-item act"><div class="u-bullet"></div>Dashboard</div>
+        <div class="u-item"><div class="u-bullet"></div>Network Graph</div>
+        <div class="u-item"><div class="u-bullet"></div>Data Pipeline</div>
+        <div class="u-sec">Sensors</div>
+        <div class="u-item"><div class="u-bullet"></div>Gas (FS1–FS4)</div>
+        <div class="u-item"><div class="u-bullet"></div>Temp (T1–T8)</div>
+        <div class="u-item"><div class="u-bullet"></div>Wind (WD1–WD2)</div>
+        <div class="u-sec">System</div>
+        <div class="u-item"><div class="u-bullet"></div>TCA Config</div>
+        <div class="u-item"><div class="u-bullet"></div>FSV Settings</div>
+        <div class="u-item"><div class="u-bullet"></div>Export</div>
+        <div class="u-bot">
+          <div class="u-clock" id="mine-clock">--:--:--</div>
+          <div class="u-date">Step 145 / 5,749</div>
+          <div class="u-status">NORMAL</div>
+        </div>
+      </div>
+      <div class="u-main">
+        <div class="u-topbar">
+          <div class="u-topbar-t">UGMAS Analysis Dashboard · ZhongXing Coal Mine</div>
+          <div class="u-badges">
+            <div class="u-badge ub-ok">System OK</div>
+            <div class="u-badge ub-ok">0 Active Alarms</div>
+            <div class="u-badge" style="background:rgba(77,144,240,0.12);color:#4d90f0;border:1px solid rgba(77,144,240,0.2);">197 Stable Triplets</div>
+          </div>
+        </div>
+        <div class="u-content">
+          <!-- Correlation panel -->
+          <div>
+            <div class="corr-panel" style="margin-bottom:8px;">
+              <div class="cp-title">TCA Correlation Categories</div>
+              <div class="corr-cat">
+                <div class="corr-cat-name">Gas → Gas (73)</div>
+                <div class="ci"><span style="font-size:6px;color:#4a5568;width:28px;">Great</span><div class="ci-bar"><div class="ci-fill" style="width:24%;background:#f0a940;"></div></div><span class="ci-val" style="color:#f0a940;">18</span></div>
+                <div class="ci"><span style="font-size:6px;color:#4a5568;width:28px;">V.Good</span><div class="ci-bar"><div class="ci-fill" style="width:46%;background:#4d90f0;"></div></div><span class="ci-val" style="color:#4d90f0;">34</span></div>
+                <div class="ci"><span style="font-size:6px;color:#4a5568;width:28px;">Good</span><div class="ci-bar"><div class="ci-fill" style="width:58%;background:#3ecf8e;"></div></div><span class="ci-val" style="color:#3ecf8e;">21</span></div>
+              </div>
+              <div class="corr-cat">
+                <div class="corr-cat-name">Gas → Temp (89)</div>
+                <div class="ci"><span style="font-size:6px;color:#4a5568;width:28px;">Great</span><div class="ci-bar"><div class="ci-fill" style="width:40%;background:#f0a940;"></div></div><span class="ci-val" style="color:#f0a940;">FS1·T7·T8</span></div>
+                <div class="ci"><span style="font-size:6px;color:#4a5568;width:28px;">r=0.93</span><div class="ci-bar"><div class="ci-fill" style="width:93%;background:linear-gradient(90deg,#f0a940,#f87171);"></div></div><span class="ci-val" style="color:#f87171;">0.93</span></div>
+              </div>
+              <div class="corr-cat">
+                <div class="corr-cat-name">Gas → Wind (35)</div>
+                <div class="ci"><span style="font-size:6px;color:#4a5568;width:28px;">Good</span><div class="ci-bar"><div class="ci-fill" style="width:26%;background:#a78bfa;"></div></div><span class="ci-val" style="color:#a78bfa;">9</span></div>
+                <div class="ci"><span style="font-size:6px;color:#4a5568;width:28px;">Fair</span><div class="ci-bar"><div class="ci-fill" style="width:74%;background:#3a4055;"></div></div><span class="ci-val" style="color:#3a4055;">26</span></div>
+              </div>
+            </div>
+            <div class="status-panel">
+              <div class="sp-label">System Status</div>
+              <div class="sp-status">NORMAL</div>
+              <div class="sp-alarms">✓ 0 Active Alarms</div>
+              <div style="margin-top:6px;font-size:7px;color:#3a4055;">FSV Survival Rate: 69.4%<br>Triplets Before: 284 → After: 197</div>
+            </div>
+          </div>
+
+          <!-- Mine Map -->
+          <div class="mine-map">
+            <div class="mm-title"><span>Underground Mine Map · Spatial Sensor Layout</span><span style="color:#3ecf8e;">Live</span></div>
+            <svg viewBox="0 0 320 230" style="width:100%;height:calc(100% - 20px);min-height:190px;">
+              <!-- Tunnel structure -->
+              <rect x="20" y="20" width="280" height="190" rx="4" fill="#0a0d14" stroke="#1a2535" stroke-width="1"/>
+              <!-- Main tunnel horizontal -->
+              <rect x="30" y="100" width="260" height="30" fill="#111828" rx="2"/>
+              <!-- Branch tunnels -->
+              <rect x="80" y="30" width="20" height="75" fill="#111828" rx="2"/>
+              <rect x="180" y="30" width="20" height="75" fill="#111828" rx="2"/>
+              <rect x="80" y="125" width="20" height="75" fill="#111828" rx="2"/>
+              <rect x="180" y="125" width="20" height="75" fill="#111828" rx="2"/>
+              <!-- Ventilation arrows -->
+              <text x="155" y="118" fill="#3a4055" font-size="8" text-anchor="middle">→ airflow →</text>
+
+              <!-- Gas sensors FS1-FS4 -->
+              <circle cx="60" cy="115" r="7" fill="#f87171" opacity="0.8"/>
+              <text x="60" y="118" fill="white" font-size="6" text-anchor="middle">FS1</text>
+              <circle cx="120" cy="115" r="7" fill="#f0a940" opacity="0.8"/>
+              <text x="120" y="118" fill="white" font-size="6" text-anchor="middle">FS2</text>
+              <circle cx="200" cy="115" r="7" fill="#3ecf8e" opacity="0.8"/>
+              <text x="200" y="118" fill="white" font-size="6" text-anchor="middle">FS3</text>
+              <circle cx="260" cy="115" r="7" fill="#3ecf8e" opacity="0.8"/>
+              <text x="260" y="118" fill="white" font-size="6" text-anchor="middle">FS4</text>
+
+              <!-- Temp sensors T1-T8 -->
+              <circle cx="90" cy="55" r="5" fill="#4d90f0" opacity="0.8"/>
+              <text x="90" y="58" fill="white" font-size="5" text-anchor="middle">T1</text>
+              <circle cx="190" cy="55" r="5" fill="#4d90f0" opacity="0.8"/>
+              <text x="190" y="58" fill="white" font-size="5" text-anchor="middle">T2</text>
+              <circle cx="90" cy="170" r="5" fill="#4d90f0" opacity="0.8"/>
+              <text x="90" y="173" fill="white" font-size="5" text-anchor="middle">T6</text>
+              <circle cx="190" cy="170" r="5" fill="#4d90f0" opacity="0.8"/>
+              <text x="190" y="173" fill="white" font-size="5" text-anchor="middle">T7</text>
+              <circle cx="150" cy="55" r="5" fill="#a78bfa" opacity="0.8"/>
+              <text x="150" y="58" fill="white" font-size="5" text-anchor="middle">T3</text>
+              <circle cx="150" cy="170" r="5" fill="#a78bfa" opacity="0.8"/>
+              <text x="150" y="173" fill="white" font-size="5" text-anchor="middle">T8</text>
+
+              <!-- Wind sensors WD1-WD2 -->
+              <rect x="38" y="108" width="10" height="14" rx="1" fill="#6b7a99" opacity="0.6"/>
+              <text x="43" y="130" fill="#4a5568" font-size="5" text-anchor="middle">WD1</text>
+              <rect x="272" y="108" width="10" height="14" rx="1" fill="#6b7a99" opacity="0.6"/>
+              <text x="277" y="130" fill="#4a5568" font-size="5" text-anchor="middle">WD2</text>
+
+              <!-- Correlation edges (strongest triplets) -->
+              <line x1="60" y1="115" x2="190" y2="55" stroke="#f0a940" stroke-width="1.5" opacity="0.4" stroke-dasharray="3,2"/>
+              <line x1="60" y1="115" x2="190" y2="170" stroke="#f87171" stroke-width="2" opacity="0.5"/>
+              <line x1="120" y1="115" x2="150" y2="55" stroke="#f0a940" stroke-width="1.5" opacity="0.4" stroke-dasharray="3,2"/>
+
+              <!-- Legend -->
+              <circle cx="30" cy="210" r="4" fill="#f87171" opacity="0.8"/>
+              <text x="38" y="213" fill="#4a5568" font-size="6">High Gas</text>
+              <circle cx="85" cy="210" r="4" fill="#f0a940" opacity="0.8"/>
+              <text x="93" y="213" fill="#4a5568" font-size="6">Elevated</text>
+              <circle cx="140" cy="210" r="4" fill="#3ecf8e" opacity="0.8"/>
+              <text x="148" y="213" fill="#4a5568" font-size="6">Normal</text>
+              <circle cx="190" cy="210" r="4" fill="#4d90f0" opacity="0.8"/>
+              <text x="198" y="213" fill="#4a5568" font-size="6">Temp</text>
+            </svg>
+          </div>
+
+          <!-- Right column -->
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="data-panel">
+              <div class="dp-title">Current Data Packet · Step 145</div>
+              <div class="dp-row"><span class="dp-key">FS1 (CH₄)</span><span class="dp-val hi" id="fs1-val">1.847</span></div>
+              <div class="dp-row"><span class="dp-key">FS2 (CH₄)</span><span class="dp-val mid">0.923</span></div>
+              <div class="dp-row"><span class="dp-key">T7 (°C)</span><span class="dp-val lo">0.412</span></div>
+              <div class="dp-row"><span class="dp-key">T8 (°C)</span><span class="dp-val lo">0.388</span></div>
+              <div class="dp-row"><span class="dp-key">WD1</span><span class="dp-val">-0.211</span></div>
+              <div class="dp-row"><span class="dp-key">WD2</span><span class="dp-val">-0.189</span></div>
+            </div>
+            <div class="bubble-panel">
+              <div class="bp-title">Bubble Wall · Triplet Density</div>
+              <div class="bubble-row">
+                <div class="bubble-label">Gas×Gas</div>
+                <div class="bubble-viz">
+                  <div class="bub" style="width:18px;height:18px;background:#f0a940;"></div>
+                  <div class="bub" style="width:12px;height:12px;background:#4d90f0;"></div>
+                  <div class="bub" style="width:8px;height:8px;background:#3ecf8e;"></div>
+                </div>
+              </div>
+              <div class="bubble-row">
+                <div class="bubble-label">Gas×Temp</div>
+                <div class="bubble-viz">
+                  <div class="bub" style="width:22px;height:22px;background:#f87171;"></div>
+                  <div class="bub" style="width:16px;height:16px;background:#f0a940;"></div>
+                  <div class="bub" style="width:10px;height:10px;background:#4d90f0;"></div>
+                </div>
+              </div>
+              <div class="bubble-row">
+                <div class="bubble-label">Gas×Wind</div>
+                <div class="bubble-viz">
+                  <div class="bub" style="width:10px;height:10px;background:#a78bfa;"></div>
+                  <div class="bub" style="width:6px;height:6px;background:#3a4055;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="pred-panel" style="flex:1;">
+              <div class="pp-title">1-Hour LSTM Predictions</div>
+              <div class="pred-chart">
+                <div class="pc-name">T7 Temperature</div>
+                <div style="display:flex;gap:2px;align-items:flex-end;height:24px;">
+                  <div style="flex:1;height:16px;background:#4d90f0;border-radius:1px 1px 0 0;opacity:0.8;"></div>
+                  <div style="flex:1;height:18px;background:#4d90f0;border-radius:1px 1px 0 0;opacity:0.8;"></div>
+                  <div style="flex:1;height:20px;background:#4d90f0;border-radius:1px 1px 0 0;opacity:0.8;"></div>
+                  <div style="flex:1;height:19px;background:#f0a940;border-radius:1px 1px 0 0;opacity:0.6;stroke-dasharray:2,1;"></div>
+                  <div style="flex:1;height:21px;background:#f0a940;border-radius:1px 1px 0 0;opacity:0.4;"></div>
+                  <div style="flex:1;height:22px;background:#f0a940;border-radius:1px 1px 0 0;opacity:0.35;"></div>
+                </div>
+              </div>
+              <div class="pred-chart">
+                <div class="pc-name">T8 Temperature</div>
+                <div style="display:flex;gap:2px;align-items:flex-end;height:24px;">
+                  <div style="flex:1;height:14px;background:#4d90f0;border-radius:1px 1px 0 0;opacity:0.8;"></div>
+                  <div style="flex:1;height:15px;background:#4d90f0;border-radius:1px 1px 0 0;opacity:0.8;"></div>
+                  <div style="flex:1;height:17px;background:#4d90f0;border-radius:1px 1px 0 0;opacity:0.8;"></div>
+                  <div style="flex:1;height:18px;background:#f0a940;border-radius:1px 1px 0 0;opacity:0.5;"></div>
+                  <div style="flex:1;height:19px;background:#f0a940;border-radius:1px 1px 0 0;opacity:0.35;"></div>
+                  <div style="flex:1;height:20px;background:#f0a940;border-radius:1px 1px 0 0;opacity:0.3;"></div>
+                </div>
+              </div>
+              <div style="font-size:7px;color:#3a4055;margin-top:4px;display:flex;gap:8px;">
+                <span><span style="color:#4d90f0;">■</span> Actual</span>
+                <span><span style="color:#f0a940;">■</span> Forecast</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECT INTRO -->
+<div class="section">
+  <h2 class="sec-title">项目背景与研究问题</h2>
+  <p class="sec-sub">地下煤矿甲烷爆炸是全球最严峻的工业安全威胁之一。现有监控系统以单一阈值报警为主，面对多变量气体-风速-温度的复合前兆信号时存在严重盲区——运营人员经常面对「报警洪水」却无法快速定位根因。</p>
+  <div class="two-col">
+    <div>
+      <div class="sub-title">核心研究目标</div>
+      <div class="body-text">
+        <p>本项目聚焦于 <strong>Triple-Correlation Analysis（TCA）</strong>框架的<strong>可解释可视化层</strong>设计，而非优化算法本身。目标是将数值精确但认知不透明的相关性矩阵，转化为操作人员无需统计学背景即可实时理解的动态网络视图。</p>
+        <p>核心问题：<strong>如何在时间压力下，将复杂多变量气体相关性分析结果设计成操作人员可信赖、可操作的可视化界面？</strong></p>
+      </div>
+    </div>
+    <div>
+      <div class="sub-title">数据集</div>
+      <div class="body-text">
+        <ul>
+          <li>来源：中兴矿真实传感器数据（Wu et al., 2021）</li>
+          <li>规模：12个传感器通道 × 5,749 时间步</li>
+          <li>类型：气体（FS1–FS4）、温度（T1–T8）、风向（WD1–WD2）</li>
+          <li>周期：2022年1–2月，约320万条独立读数</li>
+          <li>识别稳定三元组：197条（FSV过滤后，存活率69.4%）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THREE VERSIONS -->
+<div class="section">
+  <h2 class="sec-title">三版迭代演进</h2>
+  <p class="sec-sub">系统历经三个版本的完整重构，每一版都基于前一版的可用性缺陷做出根本性设计决策调整。</p>
+  <div class="timeline">
+    <div class="tl-line"></div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-ver">V1 · Week 1–6</div>
+      <div class="tl-name">继承矩阵系统 — 修复与增强</div>
+      <div class="tl-desc">接手现有三分法代码库，发现四项严重缺陷：KMO 值硬编码为常数 0.500、矩阵单元格仅显示二值颜色无数值、相关阈值固定不可调、无数据清洗流水线。逐一修复：动态 KMO 计算、嵌入 r 系数数值、增加 RELAXED/STRICT 模式切换与 r-min 滑块、添加 IQR 异常值检测 + z-score 归一化预处理流水线。矩阵范式的根本局限仍在——操作人员仍需扫描行列才能推断拓扑关系。</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-ver">V2 · Week 7–11</div>
+      <div class="tl-name">网络图系统 — 从零重构</div>
+      <div class="tl-desc">核心洞察：矩阵以表格坐标编码关系，强迫用户在头脑中重建拓扑；而动态多变量网络（DMVN）直接外化拓扑——传感器变为节点，相关性变为边，图结构本身传达哪些传感器是核心、哪些是外围。接受 CSV 流替代 Excel 文件，引入参数控制面板（|r| / p / 分析深度），绿色表示正相关、红色负相关。Week 11 升级：边渲染同时通过线宽和颜色饱和度编码五级相关强度，并添加鼠标悬停高亮和方向动画。</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-ver">V3 · May 2026</div>
+      <div class="tl-name">UGMAS 全面板仪表盘 — 最终系统</div>
+      <div class="tl-desc">将抽象浮动节点布局替换为<strong>空间锚定矿井地图</strong>，传感器节点定位于真实物理坐标。新增<strong>气泡墙可视化面板</strong>（气泡半径编码三领域相关密度）、<strong>LSTM 一小时预测轨迹</strong>（T1–T8全部传感器）、为工程师和操作人员双用户角色设计的<strong>数据输入管道视图</strong>（JSON面板 + 平铺传感器值表），以及 NORMAL/ALERT 实时状态指示器。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ARCH + ALGORITHM -->
+<div class="section">
+  <div class="two-col">
+    <div>
+      <div class="sub-title">三层系统架构</div>
+      <div class="body-text">
+        <ul>
+          <li><strong>数据层：</strong>CSV 采集 → 模式验证 → IQR异常值筛除 → z-score/min-max归一化 → NumPy矩阵序列化为JSON</li>
+          <li><strong>应用层（Python/Flask）：</strong>TCA 三元组相关系数计算（几何均值Pearson）→ FSV 稳定性验证（30次Bootstrap ±5%漂移门控）→ RESTful API</li>
+          <li><strong>视图层（Vue.js + D3.js）：</strong>DMVN 动态网络渲染 → 参数控制面板（|r| / p / 深度）→ 矿井地图 → 气泡墙 → LSTM预测图</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="sub-title">TCA 算法核心</div>
+      <div class="body-text">
+        <p>对12传感器池中每个有序三元组 (Xᵢ, Yⱼ, Zₖ) 计算复合相关系数：三对 Pearson 系数绝对值的几何均值归一化至 [-1,+1]，双尾 t 检验 α=.01 评估显著性。</p>
+        <p>五级强度解释尺度：<strong>Great (|r|≥.90) · Very Good (.75–.89) · Good (.50–.74) · Fair (.30–.49) · Poor (.00–.29)</strong></p>
+        <p>最强发现：FS1–T7–T8 三元组 r=0.93，FS2–T6–T7 r=0.91，气温配对主导高强度层，与地下甲烷通过浮力驱动分层积累的物理机制一致。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="section">
+  <h2 class="sec-title">数据分析结果</h2>
+  <p class="sec-sub">基于 5,749 步全量数据集，使用默认阈值（|r|≥.30；p≤.01）的 TCA 运行统计。</p>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-n">284</div><div class="stat-l">FSV过滤前候选三元组</div></div>
+    <div class="stat-card"><div class="stat-n">197</div><div class="stat-l">稳定三元组（69.4%存活率）</div></div>
+    <div class="stat-card"><div class="stat-n">18</div><div class="stat-l">Great强度三元组（|r|≥.90）</div></div>
+  </div>
+  <div style="margin-top:1.5rem;" class="two-col">
+    <div>
+      <div class="sub-title">用户评估结果</div>
+      <div class="body-text"><p>5名研究生工程专业学生，DMVN可视化 vs 静态相关矩阵根因溯源对比测试。使用 DMVN 视图的参与者<strong>一致更快完成任务</strong>，自报信心评分在5人中均高于矩阵条件，印证了动态网络视图在安全关键场景下降低认知负荷、加速决策的文献结论。</p></div>
+    </div>
+    <div>
+      <div class="sub-title">性能指标</div>
+      <div class="body-text">
+        <ul>
+          <li>阈值调整重算延迟：&lt;2秒（5,749步全量数据集）</li>
+          <li>画布渲染：最多300个活跃节点保持流畅</li>
+          <li>FSV抑制率：31%初识别三元组被剔除</li>
+          <li>最高强度三元组：FS1–T7–T8 (r=0.93)，FS2–T6–T7 (r=0.91)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TECH + OUTCOME -->
+<div class="section">
+  <h2 class="sec-title" style="font-size:1.4rem;margin-bottom:1rem;">技术栈</h2>
+  <div class="tech-stack">
+    <span class="tc">Vue.js</span><span class="tc">D3.js</span><span class="tc">Python / Flask</span>
+    <span class="tc">NumPy / Pandas</span><span class="tc">REST API</span><span class="tc">LSTM 预测</span>
+    <span class="tc">TCA 三相关分析</span><span class="tc">FSV 稳定性验证</span><span class="tc">DMVN 动态多变量网络</span>
+    <span class="tc">Bootstrap统计重采样</span><span class="tc">IQR异常值检测</span><span class="tc">实时数据流</span>
+  </div>
+  <h2 class="sec-title" style="font-size:1.4rem;margin-top:3rem;margin-bottom:0.5rem;">项目成果</h2>
+  <div class="outcome-grid">
+    <div class="oc"><div class="oc-num">3版</div><div class="oc-label">迭代重构，每版响应真实可用性缺陷</div></div>
+    <div class="oc"><div class="oc-num">197</div><div class="oc-label">稳定三元组，FSV门控去除噪声</div></div>
+    <div class="oc"><div class="oc-num">r=0.93</div><div class="oc-label">最强三元组 FS1–T7–T8</div></div>
+    <div class="oc"><div class="oc-num">&lt;2s</div><div class="oc-label">交互参数调整全量重算延迟</div></div>
+  </div>
+</div>
+
+<footer>
+  <span class="ft-copy">© 2026 王珠峰 · Zhufeng Wang</span>
+  <div class="ft-nav">
+    <a href="index.html">← 返回主页</a>
+    <a href="rag-system.html">下一个项目 →</a>
+  </div>
+</footer>
+<script>
+function updateClock(){
+  const now=new Date();
+  const h=String(now.getHours()).padStart(2,'0');
+  const m=String(now.getMinutes()).padStart(2,'0');
+  const s=String(now.getSeconds()).padStart(2,'0');
+  const el=document.getElementById('mine-clock');
+  if(el) el.textContent=h+':'+m+':'+s;
+}
+setInterval(updateClock,1000);
+updateClock();
+let fs1=1.847;
+setInterval(()=>{
+  fs1=Math.max(1.5,Math.min(2.2,fs1+(Math.random()-0.5)*0.05));
+  const el=document.getElementById('fs1-val');
+  if(el) el.textContent=fs1.toFixed(3);
+},3000);
+</script>
+</body>
+</html>

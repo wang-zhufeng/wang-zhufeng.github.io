@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carbon Footprint Web · 王珠峰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0e14;--bg2:#111420;--bg3:#161a28;--border:#1e2436;--border2:#252d42;--text:#eef0f6;--muted:#7a8299;--faint:#3a4055;--blue:#4d90f0;--green:#3ecf8e;--amber:#f0a940;--purple:#a78bfa;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;font-weight:300;line-height:1.6;}a{text-decoration:none;color:inherit;}
+nav{position:sticky;top:0;z-index:100;background:rgba(12,14,20,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1080px;margin:0 auto;padding:0 2.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.back-link{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.06em;color:var(--muted);transition:color 0.2s;}
+.back-link:hover{color:var(--green);}
+.back-link::before{content:'←';}
+.nav-proj{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--faint);}
+.proj-hero{max-width:1080px;margin:0 auto;padding:5rem 2.5rem 4rem;border-bottom:1px solid var(--border);}
+.proj-category{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--green);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.8rem;}
+.proj-category::before{content:'';width:20px;height:1px;background:var(--green);}
+.proj-title{font-family:'Noto Serif SC',serif;font-size:clamp(2rem,4.5vw,3.2rem);font-weight:900;line-height:1.15;color:var(--text);margin-bottom:0.7rem;}
+.proj-en{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--faint);margin-bottom:2rem;}
+.proj-desc{font-size:0.96rem;color:var(--muted);line-height:1.85;font-weight:300;margin-bottom:2.5rem;max-width:760px;}
+.proj-desc strong{color:var(--text);font-weight:500;}
+.meta-row{display:flex;flex-wrap:wrap;gap:2rem;}
+.meta-label{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--faint);margin-bottom:0.3rem;}
+.meta-val{font-size:0.9rem;color:var(--text);font-weight:400;}
+.section{max-width:1080px;margin:0 auto;padding:4rem 2.5rem;border-bottom:1px solid var(--border);}
+.sec-title{font-family:'Noto Serif SC',serif;font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:0.5rem;}
+.sec-sub{font-size:0.88rem;color:var(--muted);margin-bottom:2rem;line-height:1.7;}
+.sub-title{font-family:'Noto Serif SC',serif;font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:0.9rem;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;}
+.body-text{font-size:0.88rem;color:var(--muted);line-height:1.85;font-weight:300;}
+.body-text strong{color:var(--text);font-weight:500;}
+.body-text p{margin-bottom:0.9rem;}
+.body-text p:last-child{margin-bottom:0;}
+.body-text ul{list-style:none;padding:0;}
+.body-text li{padding:0.5rem 0;border-bottom:1px solid var(--border);display:flex;gap:0.8rem;font-size:0.86rem;color:var(--muted);}
+.body-text li:last-child{border-bottom:none;}
+.body-text li::before{content:'—';color:var(--green);flex-shrink:0;}
+
+/* APP DEMO */
+.demo-frame{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,0.4);}
+.demo-titlebar{background:var(--bg3);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+.demo-dots{display:flex;gap:6px;}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot-r{background:#f87171;opacity:0.7;}.dot-y{background:#f0a940;opacity:0.7;}.dot-g{background:#3ecf8e;opacity:0.7;}
+.demo-title-text{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);}
+
+/* Carbon App UI */
+.carbon-app{background:#f8f9fa;min-height:520px;display:grid;grid-template-rows:auto 1fr;}
+.ca-nav{background:white;border-bottom:1px solid #e9ecef;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:48px;}
+.ca-brand{font-size:13px;font-weight:600;color:#198754;font-family:sans-serif;display:flex;align-items:center;gap:6px;}
+.ca-brand::before{content:'🌱';}
+.ca-nav-links{display:flex;gap:0;height:100%;}
+.ca-nav-link{font-size:11px;color:#6c757d;padding:0 12px;display:flex;align-items:center;border-bottom:2px solid transparent;font-family:sans-serif;transition:all 0.15s;cursor:pointer;}
+.ca-nav-link:hover{color:#198754;}
+.ca-nav-link.active{color:#198754;border-bottom-color:#198754;}
+.ca-user{font-size:11px;color:#6c757d;font-family:sans-serif;}
+.ca-body{padding:16px 20px;overflow:auto;}
+
+/* Dashboard */
+.ca-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.ca-kpi{background:white;border-radius:6px;padding:12px 14px;border:1px solid #e9ecef;}
+.ca-kpi-label{font-size:9px;color:#6c757d;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;font-family:sans-serif;}
+.ca-kpi-val{font-size:20px;font-weight:600;line-height:1;font-family:sans-serif;}
+.ca-kpi-sub{font-size:9px;color:#6c757d;margin-top:3px;font-family:sans-serif;}
+.kv-green{color:#198754;}.kv-blue{color:#0d6efd;}.kv-amber{color:#fd7e14;}.kv-red{color:#dc3545;}
+
+.ca-row{display:grid;grid-template-columns:1.5fr 1fr;gap:10px;margin-bottom:10px;}
+.ca-card{background:white;border-radius:6px;border:1px solid #e9ecef;padding:12px;}
+.ca-card-title{font-size:10px;font-weight:600;color:#495057;margin-bottom:10px;font-family:sans-serif;}
+.progress-wrap{margin-bottom:8px;}
+.progress-label{display:flex;justify-content:space-between;font-size:9px;color:#6c757d;margin-bottom:3px;font-family:sans-serif;}
+.progress-bar-bg{height:6px;background:#e9ecef;border-radius:3px;overflow:hidden;}
+.progress-bar{height:100%;border-radius:3px;transition:width 0.3s;}
+
+/* Mini line chart */
+.mini-chart{height:50px;display:flex;align-items:flex-end;gap:2px;padding-top:4px;}
+.mc-bar{flex:1;border-radius:1px 1px 0 0;background:#198754;opacity:0.7;}
+.mc-months{display:flex;justify-content:space-between;margin-top:3px;}
+.mc-month{font-size:7px;color:#adb5bd;font-family:sans-serif;}
+
+/* Badge */
+.badge-row{display:flex;gap:8px;flex-wrap:wrap;}
+.badge-item{background:#f8f9fa;border:1px solid #dee2e6;border-radius:6px;padding:6px 10px;font-size:9px;font-family:sans-serif;}
+.badge-icon{font-size:14px;display:block;text-align:center;margin-bottom:2px;}
+.badge-name{color:#495057;font-weight:500;}
+.badge-earned{border-color:#198754;background:#d1e7dd;}
+.badge-earned .badge-name{color:#0a3622;}
+
+/* History table */
+.hist-table{width:100%;border-collapse:collapse;font-family:sans-serif;}
+.hist-table th{font-size:9px;color:#6c757d;text-transform:uppercase;padding:4px 8px;border-bottom:1px solid #e9ecef;text-align:left;}
+.hist-table td{font-size:10px;color:#495057;padding:5px 8px;border-bottom:1px solid #f8f9fa;}
+.mode-car{color:#dc3545;}.mode-pt{color:#0d6efd;}.mode-walk{color:#198754;}.mode-bike{color:#20c997;}
+
+/* ARCH diagram */
+.arch-flow{display:flex;align-items:center;gap:0;overflow-x:auto;padding:1rem 0;}
+.af-box{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem;min-width:130px;text-align:center;flex-shrink:0;}
+.af-icon{font-size:1.4rem;margin-bottom:0.4rem;}
+.af-name{font-size:0.82rem;font-weight:500;color:var(--text);margin-bottom:0.2rem;}
+.af-sub{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--faint);}
+.af-arrow{color:var(--faint);font-size:1.4rem;padding:0 0.5rem;flex-shrink:0;}
+
+/* Controllers -->Services -->Data -->Views */
+.layer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:1rem;}
+.layer-col{background:var(--bg2);padding:1.2rem;}
+.layer-name{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.8rem;font-weight:600;}
+.ln-ctrl{color:var(--blue);}.ln-svc{color:var(--green);}.ln-data{color:var(--amber);}.ln-view{color:var(--purple);}
+.layer-item{font-size:0.78rem;color:var(--muted);padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.03);}
+.layer-item:last-child{border-bottom:none;}
+.layer-item strong{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--text);display:block;margin-bottom:0.1rem;}
+
+.tech-stack{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem;}
+.tc{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:0.35rem 0.85rem;background:rgba(62,207,142,0.08);border:1px solid rgba(62,207,142,0.2);color:var(--green);border-radius:4px;}
+.outcome-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem;}
+.oc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.2rem;}
+.oc-num{font-family:'Noto Serif SC',serif;font-size:1.8rem;font-weight:900;color:var(--green);line-height:1;margin-bottom:0.35rem;}
+.oc-label{font-size:0.8rem;color:var(--muted);font-weight:300;}
+footer{max-width:1080px;margin:0 auto;padding:1.8rem 2.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.8rem;}
+.ft-copy{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--faint);}
+.ft-nav{display:flex;gap:2rem;}
+.ft-nav a{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);transition:color 0.2s;}
+.ft-nav a:hover{color:var(--green);}
+@media(max-width:720px){.proj-hero,.section{padding:3rem 1.5rem;}.two-col{grid-template-columns:1fr;gap:2rem;}.outcome-grid{grid-template-columns:repeat(2,1fr);}.ca-kpis{grid-template-columns:repeat(2,1fr);}.ca-row{grid-template-columns:1fr;}.layer-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a class="back-link" href="index.html">返回主页</a>
+    <span class="nav-proj">王珠峰 · 项目详情</span>
+  </div>
+</nav>
+
+<div class="proj-hero">
+  <div class="proj-category">全栈开发 · ASP.NET Core · .NET 课程</div>
+  <h1 class="proj-title">Carbon Footprint Web<br>碳排放追踪系统</h1>
+  <p class="proj-en">A User-Centric ASP.NET Core System for Recording, Analyzing, and Reducing Transport-Related CO₂ Emissions</p>
+  <p class="proj-desc">
+    UTS 32998 .NET 应用开发课程 Assignment 2（两人小组），<strong>本人负责全部前端开发 + 核心后端逻辑</strong>。基于 ASP.NET Core MVC (.NET 8)、Entity Framework Core 和 SQLite，交付五页面完整 Web 应用：Dashboard、Calculator、History、Analytics、Goals & Tips，集成 Chart.js 可视化、CSV 导出、Badge 激励机制和 Cookie 认证。
+  </p>
+  <div class="meta-row">
+    <div><div class="meta-label">课程</div><div class="meta-val">UTS 32998 .NET Application Development</div></div>
+    <div><div class="meta-label">类型</div><div class="meta-val">两人小组项目</div></div>
+    <div><div class="meta-label">我的职责</div><div class="meta-val">前端100% + 核心后端</div></div>
+    <div><div class="meta-label">技术</div><div class="meta-val">ASP.NET Core · .NET 8</div></div>
+    <div><div class="meta-label">时间</div><div class="meta-val">2025年10月</div></div>
+  </div>
+</div>
+
+<!-- LIVE DEMO -->
+<div class="section">
+  <h2 class="sec-title">应用界面 Demo</h2>
+  <p class="sec-sub">以下为 Carbon Footprint Web 真实应用界面还原，展示 Dashboard 主页的 KPI 卡片、12个月碳排放趋势、出行记录历史表和 Badge 成就系统。</p>
+  <div class="demo-frame">
+    <div class="demo-titlebar">
+      <div class="demo-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+      <div class="demo-title-text">Carbon Footprint Web · localhost:5000/home</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--green);">ASP.NET Core MVC</div>
+    </div>
+    <div class="carbon-app">
+      <div class="ca-nav">
+        <div class="ca-brand">Carbon Footprint Web</div>
+        <div class="ca-nav-links">
+          <div class="ca-nav-link active">Dashboard</div>
+          <div class="ca-nav-link">Calculator</div>
+          <div class="ca-nav-link">History</div>
+          <div class="ca-nav-link">Analytics</div>
+          <div class="ca-nav-link">Goals & Tips</div>
+        </div>
+        <div class="ca-user">👤 Demo User</div>
+      </div>
+      <div class="ca-body">
+        <div class="ca-kpis">
+          <div class="ca-kpi">
+            <div class="ca-kpi-label">This Month</div>
+            <div class="ca-kpi-val kv-amber">24.7 <span style="font-size:11px;">kg</span></div>
+            <div class="ca-kpi-sub">CO₂ emitted</div>
+          </div>
+          <div class="ca-kpi">
+            <div class="ca-kpi-label">Monthly Target</div>
+            <div class="ca-kpi-val kv-green">30.0 <span style="font-size:11px;">kg</span></div>
+            <div class="ca-kpi-sub" style="color:#198754;">✓ On track</div>
+          </div>
+          <div class="ca-kpi">
+            <div class="ca-kpi-label">Total Records</div>
+            <div class="ca-kpi-val kv-blue">147</div>
+            <div class="ca-kpi-sub">trips logged</div>
+          </div>
+          <div class="ca-kpi">
+            <div class="ca-kpi-label">Badges Earned</div>
+            <div class="ca-kpi-val kv-green">3</div>
+            <div class="ca-kpi-sub">achievements</div>
+          </div>
+        </div>
+
+        <div class="ca-row">
+          <div class="ca-card">
+            <div class="ca-card-title">12-Month CO₂ Trend (kg)</div>
+            <div class="mini-chart" id="trend-chart">
+              <div class="mc-bar" style="height:40%;"></div>
+              <div class="mc-bar" style="height:55%;"></div>
+              <div class="mc-bar" style="height:48%;"></div>
+              <div class="mc-bar" style="height:62%;"></div>
+              <div class="mc-bar" style="height:70%;"></div>
+              <div class="mc-bar" style="height:58%;"></div>
+              <div class="mc-bar" style="height:45%;"></div>
+              <div class="mc-bar" style="height:52%;"></div>
+              <div class="mc-bar" style="height:60%;"></div>
+              <div class="mc-bar" style="height:75%;"></div>
+              <div class="mc-bar" style="height:65%;"></div>
+              <div class="mc-bar" style="height:82%;background:#fd7e14;"></div>
+            </div>
+            <div class="mc-months">
+              <span class="mc-month">Jul</span><span class="mc-month">Aug</span><span class="mc-month">Sep</span><span class="mc-month">Oct</span><span class="mc-month">Nov</span><span class="mc-month">Dec</span><span class="mc-month">Jan</span><span class="mc-month">Feb</span><span class="mc-month">Mar</span><span class="mc-month">Apr</span><span class="mc-month">May</span><span class="mc-month">Jun</span>
+            </div>
+          </div>
+          <div class="ca-card">
+            <div class="ca-card-title">Mode Distribution (90 days)</div>
+            <div class="progress-wrap">
+              <div class="progress-label"><span>🚗 Car</span><span style="color:#dc3545;">58%</span></div>
+              <div class="progress-bar-bg"><div class="progress-bar" style="width:58%;background:#dc3545;"></div></div>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-label"><span>🚌 Public Transport</span><span style="color:#0d6efd;">28%</span></div>
+              <div class="progress-bar-bg"><div class="progress-bar" style="width:28%;background:#0d6efd;"></div></div>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-label"><span>🚶 Walk</span><span style="color:#198754;">9%</span></div>
+              <div class="progress-bar-bg"><div class="progress-bar" style="width:9%;background:#198754;"></div></div>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-label"><span>🚲 Bicycle</span><span style="color:#20c997;">5%</span></div>
+              <div class="progress-bar-bg"><div class="progress-bar" style="width:5%;background:#20c997;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ca-row">
+          <div class="ca-card">
+            <div class="ca-card-title">Recent Trips</div>
+            <table class="hist-table">
+              <thead><tr><th>Date</th><th>Mode</th><th>Distance</th><th>CO₂</th></tr></thead>
+              <tbody>
+                <tr><td>2026-06-06</td><td class="mode-car">Car</td><td>12.0 km</td><td>2.304 kg</td></tr>
+                <tr><td>2026-06-05</td><td class="mode-pt">Public</td><td>8.5 km</td><td>0.893 kg</td></tr>
+                <tr><td>2026-06-05</td><td class="mode-walk">Walk</td><td>2.1 km</td><td>0.000 kg</td></tr>
+                <tr><td>2026-06-04</td><td class="mode-car">Car</td><td>25.0 km</td><td>4.800 kg</td></tr>
+                <tr><td>2026-06-03</td><td class="mode-bike">Bicycle</td><td>5.3 km</td><td>0.000 kg</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ca-card">
+            <div class="ca-card-title">Badges</div>
+            <div class="badge-row">
+              <div class="badge-item badge-earned">
+                <div class="badge-icon">👣</div>
+                <div class="badge-name">First Step</div>
+              </div>
+              <div class="badge-item badge-earned">
+                <div class="badge-icon">🏃</div>
+                <div class="badge-name">Active 100</div>
+              </div>
+              <div class="badge-item badge-earned">
+                <div class="badge-icon">🌿</div>
+                <div class="badge-name">Green Month</div>
+              </div>
+              <div class="badge-item" style="opacity:0.4;">
+                <div class="badge-icon">🔒</div>
+                <div class="badge-name">Eco Hero</div>
+              </div>
+            </div>
+            <div style="margin-top:8px;font-size:9px;color:#6c757d;font-family:sans-serif;">Monthly target: 30 kg · This month: 24.7 kg ✓</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ARCH -->
+<div class="section">
+  <h2 class="sec-title">系统架构设计</h2>
+  <p class="sec-sub">Controllers–Services–Data–Views 四层分离，高内聚低耦合，业务逻辑全部委托给 Service 层，Controller 保持纯编排职责。</p>
+
+  <div class="arch-flow">
+    <div class="af-box"><div class="af-icon">🌐</div><div class="af-name">Browser</div><div class="af-sub">HTTP Request</div></div>
+    <div class="af-arrow">→</div>
+    <div class="af-box"><div class="af-icon">⚙️</div><div class="af-name">Controller</div><div class="af-sub">Route + Auth</div></div>
+    <div class="af-arrow">→</div>
+    <div class="af-box"><div class="af-icon">🧮</div><div class="af-name">Service</div><div class="af-sub">EmissionSvc · BadgeSvc</div></div>
+    <div class="af-arrow">→</div>
+    <div class="af-box"><div class="af-icon">🗄️</div><div class="af-name">EF Core</div><div class="af-sub">AppDbContext · SQLite</div></div>
+    <div class="af-arrow">→</div>
+    <div class="af-box"><div class="af-icon">🖥️</div><div class="af-name">Razor View</div><div class="af-sub">Bootstrap · Chart.js</div></div>
+  </div>
+
+  <div class="layer-grid">
+    <div class="layer-col">
+      <div class="layer-name ln-ctrl">Controllers</div>
+      <div class="layer-item"><strong>AccountController</strong>登录 / 注册 / 登出（Cookie 认证）</div>
+      <div class="layer-item"><strong>HomeController</strong>Dashboard 指标 + Badge + 近期记录</div>
+      <div class="layer-item"><strong>RecordsController</strong>Calculator 页 + History 页 + 协调 Badge</div>
+      <div class="layer-item"><strong>AnalyticsController</strong>月度聚合 + 出行模式分布 + 90天统计</div>
+      <div class="layer-item"><strong>GoalsController</strong>月目标持久化 + 生态建议 + Badge 展示</div>
+      <div class="layer-item"><strong>ExportController</strong>UTF-8 CSV 按过滤器导出</div>
+    </div>
+    <div class="layer-col">
+      <div class="layer-name ln-svc">Services</div>
+      <div class="layer-item"><strong>EmissionService</strong>e(m,d)=max(d,0)×f(m) 碳排放计算引擎<br>Car 0.192 · PT 0.105 · Bike 0 · Walk 0 kg/km</div>
+      <div class="layer-item"><strong>BadgeService</strong>三条规则：First Step / Active 100 / Green Month，记录变更后自动触发重算，幂等且单调</div>
+    </div>
+    <div class="layer-col">
+      <div class="layer-name ln-data">Data (EF Core)</div>
+      <div class="layer-item"><strong>AppDbContext</strong>Users · TravelRecords · Badges<br>一对多关系 · 级联行为显式定义</div>
+      <div class="layer-item"><strong>AppUser</strong>Id · Email · DisplayName · MonthlyTargetKg · PasswordHash · Salt</div>
+      <div class="layer-item"><strong>TravelRecord</strong>Id · UserId · Date · TransportMode枚举 · DistanceKm · EmissionKg · Notes</div>
+      <div class="layer-item"><strong>DataSeeder</strong>确定性三年种子数据，首次运行即有可视化意义的图表</div>
+    </div>
+    <div class="layer-col">
+      <div class="layer-name ln-view">Views (Razor)</div>
+      <div class="layer-item"><strong>Dashboard</strong>KPI 卡片 · 目标进度条 · 近期记录 · Badge</div>
+      <div class="layer-item"><strong>Calculator</strong>即时碳排反馈（前端因子与后端完全一致）</div>
+      <div class="layer-item"><strong>History</strong>日期/模式过滤 + 排序 + 删除 + CSV 导出</div>
+      <div class="layer-item"><strong>Analytics</strong>12个月趋势折线图 + 出行模式环形图（Chart.js）</div>
+      <div class="layer-item"><strong>Goals & Tips</strong>目标设置 + 生态建议 + Badge 展示</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRIBUTION + ALGO -->
+<div class="section">
+  <div class="two-col">
+    <div>
+      <div class="sub-title">我的贡献</div>
+      <div class="body-text">
+        <p><strong>前端（100% 独立）：</strong>五个用户页面全部响应式布局设计，Bootstrap 组件规范统一（卡片/表格/告警/按钮），Chart.js 12个月趋势折线图 + 出行模式环形图配置，Calculator 即时反馈（前端因子与后端精确匹配），空状态友好引导优化，客户端输入校验。</p>
+        <p><strong>后端核心（联合完成）：</strong>三层架构设计、领域模型定义（Data Annotations 校验）、AppDbContext + EF Core 映射、EmissionService + BadgeService 实现、分析管道（LINQ 月度聚合、出行模式分布计算、90天统计）、CSV 导出接口（正确编码与引用字段）、Cookie 认证与用户隔离查询。</p>
+      </div>
+    </div>
+    <div>
+      <div class="sub-title">算法与分析</div>
+      <div class="body-text">
+        <p><strong>碳排计算：</strong><code style="font-family:'IBM Plex Mono',monospace;font-size:0.8rem;color:var(--green);">e(m,d) = max(d,0) × f(m)</code>，负距离归零，结果四舍五入到三位小数存储。前端即时预览使用完全相同的因子系数，确保一致性。</p>
+        <p><strong>12个月聚合：</strong>按 (Year, Month) 分组最近12个自然月，无数据的月份显式置零保持折线连续。</p>
+        <p><strong>Badge 规则：</strong>First Step（首条记录）/ Active 100（步行+骑行累计≥100km）/ Green Month（上月总排放≤用户目标），幂等重算，不可撤销。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TECH + OUTCOME -->
+<div class="section">
+  <h2 class="sec-title" style="font-size:1.4rem;margin-bottom:1rem;">技术栈</h2>
+  <div class="tech-stack">
+    <span class="tc">ASP.NET Core MVC (.NET 8)</span><span class="tc">C#</span><span class="tc">Entity Framework Core</span>
+    <span class="tc">SQLite</span><span class="tc">Chart.js</span><span class="tc">Bootstrap 5</span>
+    <span class="tc">Cookie 认证</span><span class="tc">LINQ 聚合查询</span><span class="tc">CSV 导出</span>
+    <span class="tc">依赖注入</span><span class="tc">Razor Views</span><span class="tc">Data Annotations 校验</span>
+  </div>
+  <h2 class="sec-title" style="font-size:1.4rem;margin-top:3rem;margin-bottom:0.5rem;">项目成果</h2>
+  <div class="outcome-grid">
+    <div class="oc"><div class="oc-num">5</div><div class="oc-label">完整用户页面，全部响应式实现</div></div>
+    <div class="oc"><div class="oc-num">6+</div><div class="oc-label">Controller · 清晰分层架构</div></div>
+    <div class="oc"><div class="oc-num">3</div><div class="oc-label">Badge 成就规则，幂等自动触发</div></div>
+    <div class="oc"><div class="oc-num">即时</div><div class="oc-label">前后端一致碳排计算，零延迟反馈</div></div>
+  </div>
+</div>
+
+<footer>
+  <span class="ft-copy">© 2026 王珠峰 · Zhufeng Wang</span>
+  <div class="ft-nav">
+    <a href="index.html">← 返回主页</a>
+    <a href="leaseflow.html">← LeaseFlow</a>
+  </div>
+</footer>
+</body>
+</html>
