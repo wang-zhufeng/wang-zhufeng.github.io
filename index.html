@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>王珠峰 · 个人主页</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0e14;
+  --bg2:#111420;
+  --bg3:#161a28;
+  --border:#1e2436;
+  --border2:#252d42;
+  --text:#eef0f6;
+  --muted:#7a8299;
+  --faint:#3a4055;
+  --blue:#4d90f0;
+  --green:#3ecf8e;
+  --amber:#f0a940;
+  --purple:#a78bfa;
+  --red:#f87171;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;font-weight:300;line-height:1.6;}
+a{text-decoration:none;color:inherit;}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(12,14,20,0.88);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0;
+}
+.nav-inner{
+  max-width:1080px;margin:0 auto;padding:0 2.5rem;
+  height:56px;display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.82rem;font-weight:500;letter-spacing:0.06em;
+  color:var(--text);
+}
+.nav-logo span{color:var(--blue);}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{
+  font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--muted);transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--text);}
+.nav-badge{
+  display:flex;align-items:center;gap:7px;
+  font-family:'IBM Plex Mono',monospace;font-size:0.7rem;
+  background:rgba(62,207,142,0.08);
+  border:1px solid rgba(62,207,142,0.2);
+  color:var(--green);
+  padding:4px 12px;border-radius:20px;
+}
+.badge-dot{
+  width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:blink 2.5s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+
+/* HERO */
+.hero{
+  max-width:1080px;margin:0 auto;
+  padding:7rem 2.5rem 5rem;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;
+  top:-200px;right:-100px;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(77,144,240,0.06) 0%,transparent 65%);
+  pointer-events:none;
+}
+.hero-kicker{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--blue);
+  margin-bottom:1.8rem;
+  display:flex;align-items:center;gap:0.8rem;
+  animation:fadeUp 0.6s 0.1s both;
+}
+.hero-kicker::before{content:'';width:24px;height:1px;background:var(--blue);}
+
+.hero-name{
+  font-family:'Noto Serif SC',serif;
+  font-size:clamp(4.5rem,9vw,8rem);
+  font-weight:900;line-height:0.95;
+  letter-spacing:-0.02em;
+  color:var(--text);
+  margin-bottom:1rem;
+  animation:fadeUp 0.7s 0.2s both;
+}
+.hero-name-en{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(0.85rem,1.8vw,1.1rem);
+  font-weight:400;letter-spacing:0.12em;
+  color:var(--faint);
+  margin-bottom:2.5rem;
+  animation:fadeUp 0.6s 0.3s both;
+}
+
+.hero-pills{
+  display:flex;flex-wrap:wrap;gap:0.6rem;
+  margin-bottom:2rem;
+  animation:fadeUp 0.6s 0.35s both;
+}
+.pill{
+  font-size:0.82rem;font-weight:400;
+  padding:0.4rem 1rem;border-radius:4px;
+  border:1px solid;
+}
+.pill-blue{color:var(--blue);border-color:rgba(77,144,240,0.3);background:rgba(77,144,240,0.07);}
+.pill-green{color:var(--green);border-color:rgba(62,207,142,0.3);background:rgba(62,207,142,0.07);}
+.pill-amber{color:var(--amber);border-color:rgba(240,169,64,0.3);background:rgba(240,169,64,0.07);}
+
+.hero-desc{
+  font-size:1rem;color:var(--muted);
+  max-width:560px;line-height:1.9;
+  margin-bottom:2.8rem;font-weight:300;
+  animation:fadeUp 0.6s 0.42s both;
+}
+.hero-desc strong{color:var(--text);font-weight:500;}
+
+.hero-cta{
+  display:flex;gap:1rem;flex-wrap:wrap;
+  animation:fadeUp 0.6s 0.5s both;
+}
+.btn-primary{
+  font-size:0.8rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;
+  padding:0.75rem 1.8rem;
+  background:var(--blue);color:#fff;
+  border:1px solid var(--blue);border-radius:4px;
+  cursor:pointer;transition:all 0.15s;display:inline-block;
+}
+.btn-primary:hover{background:#3a7de0;transform:translateY(-1px);}
+.btn-outline{
+  font-size:0.8rem;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;
+  padding:0.75rem 1.8rem;
+  background:transparent;color:var(--muted);
+  border:1px solid var(--border2);border-radius:4px;
+  cursor:pointer;transition:all 0.15s;display:inline-block;
+}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+
+/* STATS */
+.stats-bar{
+  max-width:1080px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border-bottom:1px solid var(--border);
+}
+.stat{padding:2rem 2.5rem;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat-num{
+  font-family:'Noto Serif SC',serif;
+  font-size:2.8rem;font-weight:900;
+  color:var(--text);line-height:1;
+  margin-bottom:0.5rem;
+}
+.stat-num span{color:var(--blue);}
+.stat-label{
+  font-size:0.95rem;font-weight:400;
+  color:var(--muted);
+}
+
+/* SECTIONS */
+.section{
+  max-width:1080px;margin:0 auto;
+  padding:4.5rem 2.5rem;
+  border-bottom:1px solid var(--border);
+}
+.sec-header{
+  display:flex;align-items:baseline;gap:1.5rem;
+  margin-bottom:2.8rem;
+}
+.sec-title{
+  font-family:'Noto Serif SC',serif;
+  font-size:1.8rem;font-weight:700;
+  color:var(--text);white-space:nowrap;
+}
+.sec-sub{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--faint);
+}
+.sec-line{flex:1;height:1px;background:var(--border);}
+
+/* PROJECTS */
+.proj-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;
+}
+.proj{
+  background:var(--bg2);padding:2rem;
+  transition:background 0.2s;
+  cursor:pointer;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.proj:hover{background:var(--bg3);}
+.proj-accent{
+  position:absolute;top:0;left:0;right:0;height:3px;
+  transform:scaleX(0);transform-origin:left;transition:transform 0.35s;
+}
+.proj:hover .proj-accent{transform:scaleX(1);}
+.acc-green{background:var(--green);}
+.acc-blue{background:var(--blue);}
+.acc-amber{background:var(--amber);}
+.acc-purple{background:var(--purple);}
+
+.proj-tag{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;
+  font-weight:500;margin-bottom:0.9rem;
+}
+.tag-green{color:var(--green);}
+.tag-blue{color:var(--blue);}
+.tag-amber{color:var(--amber);}
+.tag-purple{color:var(--purple);}
+
+.proj-title{
+  font-family:'Noto Serif SC',serif;
+  font-size:1.1rem;font-weight:700;
+  color:var(--text);margin-bottom:0.7rem;line-height:1.35;
+}
+.proj-desc{
+  font-size:0.82rem;color:var(--muted);
+  line-height:1.7;margin-bottom:1.2rem;
+  font-weight:300;flex:1;
+}
+.chips{display:flex;flex-wrap:wrap;gap:5px;}
+.chip{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.6rem;padding:3px 8px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border2);
+  border-radius:3px;color:var(--muted);
+}
+.proj-arrow{
+  position:absolute;top:1.5rem;right:1.5rem;
+  font-size:1rem;color:var(--faint);transition:all 0.2s;
+}
+.proj:hover .proj-arrow{color:var(--blue);transform:translate(2px,-2px);}
+
+/* SKILLS */
+.skills-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:0;background:var(--border);
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;
+}
+.sk-group{background:var(--bg2);padding:2rem;}
+.sk-name{
+  font-size:1rem;font-weight:500;color:var(--text);
+  margin-bottom:1.2rem;
+  padding-bottom:0.75rem;
+  border-bottom:1px solid var(--border);
+}
+.sk-item{
+  font-size:0.84rem;color:var(--muted);
+  padding:0.35rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  font-weight:300;
+}
+.sk-item:last-child{border-bottom:none;}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;}
+.about-body{font-size:0.9rem;color:var(--muted);line-height:1.9;font-weight:300;}
+.about-body strong{color:var(--text);font-weight:500;}
+.about-body p{margin-bottom:1.2rem;}
+.about-body p:last-child{margin-bottom:0;}
+
+.ach-list{list-style:none;}
+.ach{
+  padding:1rem 0;border-bottom:1px solid var(--border);
+  display:flex;gap:1rem;
+}
+.ach:first-child{padding-top:0;}
+.ach:last-child{border-bottom:none;}
+.ach-line{
+  width:2px;background:var(--border2);
+  border-radius:1px;flex-shrink:0;margin-top:4px;
+}
+.ach-text{font-size:0.84rem;color:var(--muted);line-height:1.6;font-weight:300;}
+.ach-text strong{color:var(--text);font-weight:500;display:block;margin-bottom:0.2rem;}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;}
+.ct-block{margin-bottom:1.5rem;}
+.ct-label{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--faint);margin-bottom:0.4rem;
+}
+.ct-val{font-size:0.92rem;color:var(--text);font-weight:400;}
+.ct-link{
+  font-size:0.88rem;color:var(--blue);
+  border-bottom:1px solid transparent;transition:border-color 0.2s;
+  display:inline-block;
+}
+.ct-link:hover{border-color:var(--blue);}
+
+/* FOOTER */
+footer{
+  max-width:1080px;margin:0 auto;
+  padding:2rem 2.5rem;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+}
+.ft-copy{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.68rem;color:var(--faint);letter-spacing:0.06em;
+}
+.ft-links{display:flex;gap:2rem;}
+.ft-links a{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--faint);transition:color 0.2s;
+}
+.ft-links a:hover{color:var(--blue);}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@media(max-width:720px){
+  .about-grid,.contact-grid{grid-template-columns:1fr;gap:2rem;}
+  .stats-bar{grid-template-columns:1fr;}
+  .stat{border-right:none;border-bottom:1px solid var(--border);}
+  .stat:last-child{border-bottom:none;}
+  .nav-links{display:none;}
+  .hero{padding:4rem 1.5rem 3rem;}
+  .section{padding:3rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">WZF<span> · 个人主页</span></span>
+    <ul class="nav-links">
+      <li><a href="#projects">项目</a></li>
+      <li><a href="#skills">技能</a></li>
+      <li><a href="#about">关于</a></li>
+      <li><a href="#contact">联系</a></li>
+    </ul>
+    <div class="nav-badge"><div class="badge-dot"></div>求职中 · 2026届</div>
+  </div>
+</nav>
+
+<div class="hero">
+  <p class="hero-kicker">全栈开发 · AI应用 · 云计算 · 数据可视化</p>
+  <h1 class="hero-name">王珠峰</h1>
+  <p class="hero-name-en">ZHUFENG WANG &nbsp;·&nbsp; zhufengwang1225-coder</p>
+  <div class="hero-pills">
+    <span class="pill pill-blue">AI 应用开发工程师</span>
+    <span class="pill pill-green">数据可视化工程师</span>
+    <span class="pill pill-amber">悉尼科技大学 硕士 · 2026届 · High Distinction</span>
+  </div>
+  <p class="hero-desc">
+    擅长从云端基础设施到用户界面的全链路交付，具备 <strong>RAG 全流程工程经验</strong>与扎实的前后端基础。<br>
+    深度使用 AI 工具辅助开发，具备强 AI 原生工作习惯。
+  </p>
+  <div class="hero-cta">
+    <a class="btn-primary" href="#projects">查看项目</a>
+    <a class="btn-outline" href="Resume_Zhufeng_Wang_EN.pdf" download>英文简历 ↓</a>
+    <a class="btn-outline" href="王珠峰_简历.pdf" download>中文简历 ↓</a>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num">6<span>+</span></div>
+    <div class="stat-label">交付项目</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">2<span>×</span></div>
+    <div class="stat-label">亚运会国家队陪练</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">前<span>0.001%</span></div>
+    <div class="stat-label">英雄联盟世界排名</div>
+  </div>
+</div>
+
+<div class="section" id="projects">
+  <div class="sec-header">
+    <h2 class="sec-title">精选项目</h2>
+    <span class="sec-sub">Selected Projects</span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="proj-grid">
+
+    <div class="proj" onclick="location.href='projects/uts-library.html'">
+      <div class="proj-accent acc-purple"></div>
+      <div class="proj-tag tag-purple">数据可视化 · UTS 导师团队</div>
+      <div class="proj-title">UTS 图书馆数据监控大屏</div>
+      <div class="proj-desc">独立负责 Building 1 监控大屏全部 UI 设计与前端实现，将人流量、座位占用率、图书状态等多模块数据转化为实时可视化看板，提升场馆运营可观测性。</div>
+      <div class="chips">
+        <span class="chip">前端 UI</span><span class="chip">数据可视化</span><span class="chip">实时更新</span><span class="chip">多模块布局</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+
+    <div class="proj" onclick="location.href='projects/rag-system.html'">
+      <div class="proj-accent acc-green"></div>
+      <div class="proj-tag tag-green">AI · 个人项目</div>
+      <div class="proj-title">多模态 RAG 文档问答系统</div>
+      <div class="proj-desc">支持 PDF / Markdown / 图片多源知识，搭建「离线建索引 → 在线检索 → 效果评测」全链路。BM25 + 稠密向量混合检索 + Rerank 精排，RAGAS / Hit@k / MRR 量化评测。</div>
+      <div class="chips">
+        <span class="chip">Python</span><span class="chip">LangChain</span><span class="chip">Chroma</span><span class="chip">BM25</span><span class="chip">RAGAS</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+
+    <div class="proj" onclick="location.href='projects/coal-mine.html'">
+      <div class="proj-accent acc-amber"></div>
+      <div class="proj-tag tag-amber">数据可视化 · 中兴集团</div>
+      <div class="proj-title">煤矿气体异常检测与预警系统</div>
+      <div class="proj-desc">基于 Vue3 + ECharts 构建多图表联动实时监测大屏，实现多源传感器数据动态刷新；参与「三分法」异常检测算法逻辑梳理与阈值优化，已在测试环境部署。</div>
+      <div class="chips">
+        <span class="chip">Vue3</span><span class="chip">ECharts</span><span class="chip">Flask</span><span class="chip">Python</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+
+    <div class="proj" onclick="location.href='projects/freshbasket.html'">
+      <div class="proj-accent acc-blue"></div>
+      <div class="proj-tag tag-blue">云计算 · AWS · 独立完成</div>
+      <div class="proj-title">FreshBasket 高可用云架构</div>
+      <div class="proj-desc">在 AWS 完整搭建生产级多层架构：自定义 VPC、ALB、Auto Scaling（2–8实例）、RDS MySQL Multi-AZ 热备、Elastic Beanstalk 编排，CloudWatch 告警 + SNS 通知。</div>
+      <div class="chips">
+        <span class="chip">AWS</span><span class="chip">Elastic Beanstalk</span><span class="chip">RDS Multi-AZ</span><span class="chip">Flask</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+
+    <div class="proj" onclick="location.href='projects/carbon.html'">
+      <div class="proj-accent acc-green"></div>
+      <div class="proj-tag tag-green">全栈开发 · .NET</div>
+      <div class="proj-title">Carbon Footprint Web</div>
+      <div class="proj-desc">ASP.NET Core MVC 全栈交付，五页面完整应用。Chart.js 12个月趋势图 + 出行模式环图、CSV 导出、Badge 激励系统、EF Core + SQLite 持久化，Cookie 用户认证。</div>
+      <div class="chips">
+        <span class="chip">ASP.NET Core</span><span class="chip">C#</span><span class="chip">EF Core</span><span class="chip">Chart.js</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+
+    <div class="proj" onclick="location.href='projects/leaseflow.html'">
+      <div class="proj-accent acc-blue"></div>
+      <div class="proj-tag tag-blue">PaaS · Salesforce · 数据模型100%独立</div>
+      <div class="proj-title">LeaseFlow 租赁合同管理系统</div>
+      <div class="proj-desc">Force.com 上设计完整数据模型，7条验证规则，8条 Flow 自动化工作流覆盖合同全生命周期，4角色权限体系 + 字段级安全策略 + OWD 组织默认设置。</div>
+      <div class="chips">
+        <span class="chip">Salesforce</span><span class="chip">Force.com</span><span class="chip">Flow</span><span class="chip">RBAC</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+
+  </div>
+</div>
+
+<div class="section" id="skills">
+  <div class="sec-header">
+    <h2 class="sec-title">技术栈</h2>
+    <span class="sec-sub">Technical Skills</span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="sk-group">
+      <div class="sk-name">AI 工程</div>
+      <div class="sk-item">RAG 全链路（切分 / 检索 / Rerank / 评测）</div>
+      <div class="sk-item">LangChain · Chroma · BM25</div>
+      <div class="sk-item">RAGAS · Hit@k · MRR 评测</div>
+      <div class="sk-item">Agent 基本原理 · Tool Use</div>
+      <div class="sk-item">Claude / ChatGPT / Cursor · AI 原生工作流</div>
+    </div>
+    <div class="sk-group">
+      <div class="sk-name">前端 & 可视化</div>
+      <div class="sk-item">Vue3 · ECharts 数据大屏</div>
+      <div class="sk-item">HTML5 · CSS3 · JavaScript ES6+</div>
+      <div class="sk-item">Chart.js · D3.js</div>
+      <div class="sk-item">响应式 UI 设计</div>
+    </div>
+    <div class="sk-group">
+      <div class="sk-name">后端 & 语言</div>
+      <div class="sk-item">Python · Flask · FastAPI</div>
+      <div class="sk-item">C# · ASP.NET Core</div>
+      <div class="sk-item">EF Core · SQLite · MySQL</div>
+      <div class="sk-item">REST API 设计 · Java（了解）</div>
+    </div>
+    <div class="sk-group">
+      <div class="sk-name">云 & 基础设施</div>
+      <div class="sk-item">AWS（EC2 · RDS · ALB · SNS）</div>
+      <div class="sk-item">Elastic Beanstalk · CloudWatch</div>
+      <div class="sk-item">Salesforce Force.com · Flow 自动化</div>
+      <div class="sk-item">Linux · Git · GitHub Pages</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="about">
+  <div class="sec-header">
+    <h2 class="sec-title">关于我</h2>
+    <span class="sec-sub">About</span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="about-grid">
+    <div>
+      <div class="about-body">
+        <p>来自河南许昌，<strong>悉尼科技大学（QS 88）软件系统工程硕士 2026 届</strong>，当前成绩 High Distinction（均分 85+）。全英文授课项目，雅思 6.5，可无障碍阅读英文技术文档，具备跨团队英文协作经验。</p>
+        <p>本科就读于兰州理工大学软件工程专业，<strong>GPA 排名 11/151</strong>，持有<strong>国家发明专利</strong>一项（CN201721739406）。</p>
+        <p>深度使用 Obsidian + Claude 搭建个人知识库与 AI 辅助工作流，具备较强的 AI 原生工作习惯。求职意向：AI 应用开发 / 数据可视化工程师 / 全栈开发，可调动。</p>
+      </div>
+    </div>
+    <div>
+      <ul class="ach-list">
+        <li class="ach">
+          <div class="ach-line"></div>
+          <div class="ach-text">
+            <strong>亚运会国家队陪练</strong>
+            分别于 2018 雅加达、2023 杭州亚运会备战期，担任英雄联盟中国国家队陪练（苏宁易购电竞俱乐部），提供高强度对抗训练与战术支持。
+          </div>
+        </li>
+        <li class="ach">
+          <div class="ach-line"></div>
+          <div class="ach-text">
+            <strong>英雄联盟世界排名第 298 位</strong>
+            个人最高世界排名，位列全球前 0.001%。
+          </div>
+        </li>
+        <li class="ach">
+          <div class="ach-line"></div>
+          <div class="ach-text">
+            <strong>国家发明专利（CN201721739406）</strong>
+            软件工程领域国家级发明专利持有人。
+          </div>
+        </li>
+        <li class="ach">
+          <div class="ach-line"></div>
+          <div class="ach-text">
+            <strong>「华为杯」Java 编程大赛 三等奖</strong>
+            「互联网+」大赛省级二等奖 / 校级一等奖；本科奖学金一等 ×1、二等 ×1、三等 ×2。
+          </div>
+        </li>
+        <li class="ach">
+          <div class="ach-line"></div>
+          <div class="ach-text">
+            <strong>捷普科技（Jabil Shanghai）全栈实习</strong>
+            与组员共同设计并实现多人协作在线文档编辑（Java + Vue），获项目设计第二名。
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section" id="contact">
+  <div class="sec-header">
+    <h2 class="sec-title">联系方式</h2>
+    <span class="sec-sub">Contact</span>
+    <div class="sec-line"></div>
+  </div>
+  <div class="contact-grid">
+    <div>
+      <div class="ct-block">
+        <div class="ct-label">邮箱</div>
+        <div class="ct-val">wang.zhufeng@outlook.com</div>
+      </div>
+      <div class="ct-block">
+        <div class="ct-label">电话</div>
+        <div class="ct-val">+86 173-6156-4098</div>
+      </div>
+      <div class="ct-block">
+        <div class="ct-label">现居 / 求职地</div>
+        <div class="ct-val">许昌，河南（可调动）</div>
+      </div>
+    </div>
+    <div>
+      <div class="ct-block">
+        <div class="ct-label">GitHub</div>
+        <a class="ct-link" href="https://github.com/zhufengwang1225-coder" target="_blank">github.com/zhufengwang1225-coder ↗</a>
+      </div>
+      <div class="ct-block">
+        <div class="ct-label">学历</div>
+        <div class="ct-val">悉尼科技大学 · 软件系统工程 硕士 · 2026届</div>
+      </div>
+      <div class="ct-block">
+        <div class="ct-label">求职意向</div>
+        <div class="ct-val">AI 应用开发 · 数据可视化工程师 · 全栈开发</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span class="ft-copy">© 2026 王珠峰 · Zhufeng Wang</span>
+  <div class="ft-links">
+    <a href="https://github.com/zhufengwang1225-coder" target="_blank">GitHub</a>
+    <a href="mailto:wang.zhufeng@outlook.com">Email</a>
+    <a href="王珠峰_简历.pdf" download>简历</a>
+  </div>
+</footer>
+
+</body>
+</html>

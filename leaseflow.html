@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeaseFlow 租赁合同管理系统 · 王珠峰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0e14;--bg2:#111420;--bg3:#161a28;
+  --border:#1e2436;--border2:#252d42;
+  --text:#eef0f6;--muted:#7a8299;--faint:#3a4055;
+  --blue:#4d90f0;--green:#3ecf8e;--amber:#f0a940;--purple:#a78bfa;--red:#f87171;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;font-weight:300;line-height:1.6;}
+a{text-decoration:none;color:inherit;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(12,14,20,0.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1080px;margin:0 auto;padding:0 2.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.back-link{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;letter-spacing:0.06em;color:var(--muted);transition:color 0.2s;}
+.back-link:hover{color:var(--blue);}
+.back-link::before{content:'←';font-size:0.9rem;}
+.nav-proj{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--faint);}
+
+.proj-hero{max-width:1080px;margin:0 auto;padding:5rem 2.5rem 4rem;border-bottom:1px solid var(--border);}
+.proj-category{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--blue);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.8rem;}
+.proj-category::before{content:'';width:20px;height:1px;background:var(--blue);}
+.proj-title{font-family:'Noto Serif SC',serif;font-size:clamp(2rem,4.5vw,3.2rem);font-weight:900;line-height:1.15;color:var(--text);margin-bottom:0.7rem;}
+.proj-en{font-family:'IBM Plex Mono',monospace;font-size:0.78rem;letter-spacing:0.08em;color:var(--faint);margin-bottom:2rem;}
+.proj-desc{font-size:0.96rem;color:var(--muted);line-height:1.85;font-weight:300;margin-bottom:2.5rem;max-width:720px;}
+.proj-desc strong{color:var(--text);font-weight:500;}
+.meta-row{display:flex;flex-wrap:wrap;gap:2rem;}
+.meta-label{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--faint);margin-bottom:0.3rem;}
+.meta-val{font-size:0.9rem;color:var(--text);font-weight:400;}
+
+.section{max-width:1080px;margin:0 auto;padding:4rem 2.5rem;border-bottom:1px solid var(--border);}
+.sec-title{font-family:'Noto Serif SC',serif;font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:0.5rem;}
+.sec-sub-text{font-size:0.88rem;color:var(--muted);margin-bottom:2rem;line-height:1.7;}
+.sub-title{font-family:'Noto Serif SC',serif;font-size:1.25rem;font-weight:700;color:var(--text);margin-bottom:1rem;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;}
+.body-text{font-size:0.88rem;color:var(--muted);line-height:1.85;font-weight:300;}
+.body-text strong{color:var(--text);font-weight:500;}
+.body-text p{margin-bottom:0.9rem;}
+.body-text p:last-child{margin-bottom:0;}
+.body-text ul{list-style:none;padding:0;}
+.body-text li{padding:0.55rem 0;border-bottom:1px solid var(--border);display:flex;gap:0.8rem;font-size:0.86rem;color:var(--muted);}
+.body-text li:last-child{border-bottom:none;}
+.body-text li::before{content:'—';color:var(--blue);flex-shrink:0;}
+
+/* ERD DIAGRAM */
+.erd-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:2rem;overflow-x:auto;}
+.erd-title{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);margin-bottom:1.5rem;text-align:center;}
+.erd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;min-width:580px;}
+.erd-entity{background:var(--bg3);border-radius:8px;overflow:hidden;border:1px solid var(--border2);}
+.erd-header{padding:0.6rem 0.8rem;font-size:0.75rem;font-weight:600;font-family:'IBM Plex Mono',monospace;letter-spacing:0.04em;}
+.erd-header.blue{background:rgba(77,144,240,0.15);color:var(--blue);border-bottom:1px solid rgba(77,144,240,0.2);}
+.erd-header.green{background:rgba(62,207,142,0.15);color:var(--green);border-bottom:1px solid rgba(62,207,142,0.2);}
+.erd-header.amber{background:rgba(240,169,64,0.15);color:var(--amber);border-bottom:1px solid rgba(240,169,64,0.2);}
+.erd-header.purple{background:rgba(167,139,250,0.15);color:var(--purple);border-bottom:1px solid rgba(167,139,250,0.2);}
+.erd-field{padding:0.3rem 0.8rem;font-size:0.68rem;color:var(--muted);border-bottom:1px solid rgba(255,255,255,0.03);font-family:'IBM Plex Mono',monospace;}
+.erd-field:last-child{border-bottom:none;}
+.erd-field.pk{color:var(--amber);}
+.erd-field.fk{color:var(--blue);}
+
+/* WORKFLOW */
+.wf-list{display:flex;flex-direction:column;gap:0.8rem;margin-top:1rem;}
+.wf-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem;display:flex;gap:1rem;align-items:flex-start;}
+.wf-num{
+  font-family:'IBM Plex Mono',monospace;font-size:0.65rem;
+  background:rgba(77,144,240,0.12);border:1px solid rgba(77,144,240,0.2);
+  color:var(--blue);padding:3px 8px;border-radius:3px;flex-shrink:0;margin-top:2px;
+}
+.wf-body{}
+.wf-name{font-size:0.9rem;font-weight:500;color:var(--text);margin-bottom:0.25rem;}
+.wf-desc{font-size:0.8rem;color:var(--muted);line-height:1.6;}
+.wf-outcome{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--green);margin-top:0.3rem;}
+
+/* ROLES TABLE */
+.roles-table{width:100%;border-collapse:collapse;margin-top:1rem;}
+.roles-table th{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);padding:0.6rem 1rem;border-bottom:1px solid var(--border);text-align:left;}
+.roles-table td{padding:0.75rem 1rem;border-bottom:1px solid rgba(30,36,54,0.6);font-size:0.84rem;color:var(--muted);vertical-align:top;}
+.roles-table tr:last-child td{border-bottom:none;}
+.roles-table tr:hover td{background:rgba(255,255,255,0.02);}
+.role-name{color:var(--text);font-weight:500;}
+.perm-chip{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.58rem;padding:2px 6px;border-radius:2px;margin:1px;}
+.p-rw{background:rgba(62,207,142,0.1);color:var(--green);border:1px solid rgba(62,207,142,0.2);}
+.p-ro{background:rgba(77,144,240,0.1);color:var(--blue);border:1px solid rgba(77,144,240,0.2);}
+.p-rev{background:rgba(240,169,64,0.1);color:var(--amber);border:1px solid rgba(240,169,64,0.2);}
+
+/* VALIDATION TABLE */
+.val-table{width:100%;border-collapse:collapse;margin-top:1rem;}
+.val-table th{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);padding:0.6rem 1rem;border-bottom:1px solid var(--border);text-align:left;}
+.val-table td{padding:0.7rem 1rem;border-bottom:1px solid rgba(30,36,54,0.6);font-size:0.82rem;color:var(--muted);}
+.val-table tr:last-child td{border-bottom:none;}
+.rule-code{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--amber);}
+
+/* SCREENS MOCK */
+.screens-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;margin-top:1.5rem;}
+.screen-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.sf-window{background:#f3f2f2;height:170px;display:flex;flex-direction:column;overflow:hidden;}
+.sf-header{background:#0070d2;padding:4px 8px;display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.sf-logo{color:white;font-size:9px;font-weight:700;font-family:sans-serif;}
+.sf-nav-item{color:rgba(255,255,255,0.7);font-size:8px;font-family:sans-serif;}
+.sf-body{flex:1;padding:8px;overflow:hidden;background:#f3f2f2;}
+.sf-title-bar{background:white;border-radius:3px;padding:5px 8px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
+.sf-record-name{font-size:9px;font-weight:600;color:#0070d2;font-family:sans-serif;}
+.sf-btn{background:#0070d2;color:white;font-size:7px;padding:2px 6px;border-radius:2px;font-family:sans-serif;}
+.sf-fields{background:white;border-radius:3px;padding:6px 8px;}
+.sf-field-row{display:flex;gap:8px;margin-bottom:3px;}
+.sf-field-label{font-size:7px;color:#666;width:70px;flex-shrink:0;font-family:sans-serif;}
+.sf-field-val{font-size:7px;color:#333;font-family:sans-serif;}
+.sf-badge-active{background:#2e844a;color:white;font-size:6px;padding:1px 5px;border-radius:3px;font-family:sans-serif;}
+.sf-badge-pending{background:#fe9339;color:white;font-size:6px;padding:1px 5px;border-radius:3px;font-family:sans-serif;}
+.screen-caption{padding:0.9rem 1rem;font-size:0.82rem;color:var(--muted);}
+.screen-caption strong{color:var(--text);font-weight:500;display:block;margin-bottom:0.2rem;}
+
+/* OUTCOME */
+.outcome-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem;}
+.oc{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1.2rem;}
+.oc-num{font-family:'Noto Serif SC',serif;font-size:1.8rem;font-weight:900;color:var(--blue);line-height:1;margin-bottom:0.35rem;}
+.oc-label{font-size:0.8rem;color:var(--muted);font-weight:300;}
+
+.tech-stack{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem;}
+.tc{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;padding:0.35rem 0.85rem;background:rgba(77,144,240,0.08);border:1px solid rgba(77,144,240,0.2);color:var(--blue);border-radius:4px;}
+
+.contrib-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:8px;padding:1.5rem;margin-top:1.5rem;}
+.contrib-box h4{font-size:0.9rem;font-weight:500;color:var(--text);margin-bottom:0.8rem;}
+.contrib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.5rem;}
+.contrib-item{font-size:0.8rem;color:var(--muted);padding:0.3rem 0;display:flex;gap:0.5rem;}
+.contrib-item::before{content:'✓';color:var(--green);flex-shrink:0;}
+
+footer{max-width:1080px;margin:0 auto;padding:1.8rem 2.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.8rem;}
+.ft-copy{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--faint);}
+.ft-nav{display:flex;gap:2rem;}
+.ft-nav a{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);transition:color 0.2s;}
+.ft-nav a:hover{color:var(--blue);}
+
+@media(max-width:720px){
+  .proj-hero,.section{padding:3rem 1.5rem;}
+  .two-col{grid-template-columns:1fr;gap:2rem;}
+  .outcome-grid{grid-template-columns:repeat(2,1fr);}
+  .erd-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="back-link" href="../index.html">返回主页</a>
+    <span class="nav-proj">王珠峰 · 项目详情</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="proj-hero">
+  <div class="proj-category">PaaS · Salesforce Force.com · 数据模型100%独立完成</div>
+  <h1 class="proj-title">LeaseFlow<br>租赁合同管理系统</h1>
+  <p class="proj-en">LeaseFlow — Residential Lease Approval and Renewal System on Force.com PaaS</p>
+  <p class="proj-desc">
+    UTS 42904 云计算课程 Assignment 2（三人小组），<strong>个人独立负责全部数据模型设计</strong>——4个核心对象、字段设计、对象关系、7条验证规则，零代码实现企业级数据完整性保障。系统在 Salesforce Force.com 上完整部署，覆盖租赁合同从创建、审批、续租到到期全生命周期，配合队友完成 8 条自动化工作流与 4 角色安全体系。
+  </p>
+  <div class="meta-row">
+    <div><div class="meta-label">课程</div><div class="meta-val">UTS 42904 云计算</div></div>
+    <div><div class="meta-label">Assignment</div><div class="meta-val">A2 小组项目</div></div>
+    <div><div class="meta-label">我的职责</div><div class="meta-val">数据模型 100%独立</div></div>
+    <div><div class="meta-label">平台</div><div class="meta-val">Salesforce Force.com</div></div>
+    <div><div class="meta-label">学号</div><div class="meta-val">25632528</div></div>
+  </div>
+</div>
+
+<!-- DATA MODEL -->
+<div class="section">
+  <h2 class="sec-title">数据模型设计</h2>
+  <p class="sec-sub-text">系统核心由 4 个业务对象构成：Property（房产）、Tenant（租客）、Lease Contract（租约合同）、Renewal Request（续租申请）。所有设计均由本人独立完成，包括字段定义、关系类型选择及业务规则编码。</p>
+
+  <div class="erd-wrap">
+    <div class="erd-title">Salesforce Object Relationship Diagram — LeaseFlow Core Objects</div>
+    <div class="erd-grid">
+      <div class="erd-entity">
+        <div class="erd-header blue">🏠 Property</div>
+        <div class="erd-field pk">Property_ID__c (PK)</div>
+        <div class="erd-field">Property_Name__c</div>
+        <div class="erd-field">Address__c</div>
+        <div class="erd-field">Property_Type__c</div>
+        <div class="erd-field">Weekly_Rent__c</div>
+        <div class="erd-field">Status__c</div>
+        <div class="erd-field fk">Assigned_PM (Lookup→User)</div>
+        <div class="erd-field">Bedrooms / Bathrooms</div>
+        <div class="erd-field">Notes__c</div>
+      </div>
+      <div class="erd-entity">
+        <div class="erd-header green">👤 Tenant</div>
+        <div class="erd-field pk">Tenant_ID__c (PK)</div>
+        <div class="erd-field">Full_Name__c</div>
+        <div class="erd-field">Email__c</div>
+        <div class="erd-field">Phone_Number__c</div>
+        <div class="erd-field">Employment_Status__c</div>
+        <div class="erd-field">ID_Verification__c</div>
+        <div class="erd-field">Emergency_Contact__c</div>
+        <div class="erd-field">Notes__c</div>
+      </div>
+      <div class="erd-entity">
+        <div class="erd-header amber">📄 Lease Contract</div>
+        <div class="erd-field pk">Lease_Number__c (PK)</div>
+        <div class="erd-field fk">Property__c (Lookup)</div>
+        <div class="erd-field fk">Tenant__c (Lookup)</div>
+        <div class="erd-field">Start_Date__c</div>
+        <div class="erd-field">End_Date__c</div>
+        <div class="erd-field">Weekly_Rent__c</div>
+        <div class="erd-field">Bond_Amount__c</div>
+        <div class="erd-field">Status__c</div>
+        <div class="erd-field fk">Submitted_By (Lookup)</div>
+        <div class="erd-field fk">Approving_Manager (Lookup)</div>
+        <div class="erd-field">Renewal_Required__c</div>
+      </div>
+      <div class="erd-entity">
+        <div class="erd-header purple">🔄 Renewal Request</div>
+        <div class="erd-field pk">Renewal_Request_ID (PK)</div>
+        <div class="erd-field fk">Lease_Contract__c (Master-Detail)</div>
+        <div class="erd-field">Request_Date__c</div>
+        <div class="erd-field">Current_End_Date__c</div>
+        <div class="erd-field">Proposed_New_End__c</div>
+        <div class="erd-field">Renewal_Status__c</div>
+        <div class="erd-field">Manager_Comment__c</div>
+        <div class="erd-field fk">Processed_By (Lookup)</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.2rem;padding:1rem;background:rgba(255,255,255,0.02);border-radius:6px;font-size:0.78rem;color:var(--muted);">
+      <strong style="color:var(--text);">关系设计说明：</strong>Lease Contract 对 Property 和 Tenant 使用 <strong style="color:var(--amber);">Lookup（松耦合）</strong>，支持同一房产 / 租客跨多个合同周期复用；Renewal Request 对 Lease Contract 使用 <strong style="color:var(--purple);">Master-Detail（强依赖）</strong>，续租申请不能独立于合同存在，删除合同级联删除所有续租记录，访问权限随父对象继承。
+    </div>
+  </div>
+</div>
+
+<!-- VALIDATION RULES -->
+<div class="section">
+  <h2 class="sec-title">验证规则设计（7条）</h2>
+  <p class="sec-sub-text">全部 7 条验证规则均由本人独立编写，保护日期合法性、财务准确性、必填关联完整性及续租逻辑正确性，零代码实现企业级数据约束。</p>
+  <table class="val-table">
+    <thead>
+      <tr><th>规则编号</th><th>对象</th><th>验证公式</th><th>业务目的</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="rule-code">Rule 1</span></td><td>Lease Contract</td><td><code style="font-size:0.72rem;color:var(--green);">End_Date__c &lt;= Start_Date__c</code></td><td>防止合同结束日早于开始日</td></tr>
+      <tr><td><span class="rule-code">Rule 2</span></td><td>Lease Contract</td><td><code style="font-size:0.72rem;color:var(--green);">Weekly_Rent__c &lt;= 0</code></td><td>保护财务字段，租金必须大于零</td></tr>
+      <tr><td><span class="rule-code">Rule 3</span></td><td>Lease Contract</td><td><code style="font-size:0.72rem;color:var(--green);">Bond_Amount__c &lt; 0</code></td><td>保证金不能为负数</td></tr>
+      <tr><td><span class="rule-code">Rule 4</span></td><td>Lease Contract</td><td><code style="font-size:0.72rem;color:var(--green);">ISBLANK(Property__c) OR ISBLANK(Tenant__c)</code></td><td>合同必须关联房产与租客</td></tr>
+      <tr><td><span class="rule-code">Rule 5</span></td><td>Lease Contract</td><td><code style="font-size:0.72rem;color:var(--green);">ISBLANK(Property__r.Assigned_PM__c)</code></td><td>所选房产必须有负责经理，保证审批可路由</td></tr>
+      <tr><td><span class="rule-code">Rule 6</span></td><td>Renewal Request</td><td><code style="font-size:0.72rem;color:var(--green);">ISBLANK(Lease_Contract__c)</code></td><td>续租申请必须关联合同，不能孤立存在</td></tr>
+      <tr><td><span class="rule-code">Rule 7</span></td><td>Renewal Request</td><td><code style="font-size:0.72rem;color:var(--green);">Proposed_New_End__c &lt; Request_Date__c</code></td><td>新结束日必须晚于当前合同结束日</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- WORKFLOWS -->
+<div class="section">
+  <h2 class="sec-title">自动化工作流（8条）</h2>
+  <p class="sec-sub-text">8 条 Salesforce Flow 工作流覆盖租约合同全生命周期，由队友 Van Dao Le 负责实现，本人参与系统集成与测试。</p>
+  <div class="wf-list">
+    <div class="wf-item">
+      <div class="wf-num">WF-1</div>
+      <div class="wf-body">
+        <div class="wf-name">创建新租约合同</div>
+        <div class="wf-desc">触发条件：Leasing Staff 创建合同。自动从房产字段获取 Assigned PM，填充 Approving Manager，更新状态为 Pending Approval，创建审核任务并发邮件通知经理。</div>
+        <div class="wf-outcome">→ 合同创建即自动路由至正确审批人</div>
+      </div>
+    </div>
+    <div class="wf-item">
+      <div class="wf-num">WF-2</div>
+      <div class="wf-body">
+        <div class="wf-name">经理审核合同</div>
+        <div class="wf-desc">触发条件：Property Manager 修改合同状态。批准 → Active，拒绝 → Rejected，自动发送状态变更邮件通知 Leasing Staff。</div>
+        <div class="wf-outcome">→ 审批结果实时同步，员工无需手动跟进</div>
+      </div>
+    </div>
+    <div class="wf-item">
+      <div class="wf-num">WF-3</div>
+      <div class="wf-body">
+        <div class="wf-name">30天到期预警提醒</div>
+        <div class="wf-desc">触发条件：合同结束日前 30 天。向 Leasing Staff 和负责经理发送到期提醒邮件，同时将 Renewal_Required 字段设为 True，标记需跟进续租。</div>
+        <div class="wf-outcome">→ 提前预防合同被动过期，触发续租流程</div>
+      </div>
+    </div>
+    <div class="wf-item">
+      <div class="wf-num">WF-4</div>
+      <div class="wf-body">
+        <div class="wf-name">合同自动到期</div>
+        <div class="wf-desc">触发条件：合同结束日后 6 小时。如无已批准续租，自动将合同状态更新为 Expired，无需人工干预。</div>
+        <div class="wf-outcome">→ 消除人工维护合同状态的运营负担</div>
+      </div>
+    </div>
+    <div class="wf-item">
+      <div class="wf-num">WF-5</div>
+      <div class="wf-body">
+        <div class="wf-name">创建续租申请</div>
+        <div class="wf-desc">触发条件：Leasing Staff 创建 Renewal Request。从关联合同复制当前结束日，通过房产找到 PM，填充 Processed By，设状态为 Pending Approval，发邮件给审批人。</div>
+        <div class="wf-outcome">→ 续租申请自动关联并路由，无字段遗漏</div>
+      </div>
+    </div>
+    <div class="wf-item">
+      <div class="wf-num">WF-6</div>
+      <div class="wf-body">
+        <div class="wf-name">续租审批通过</div>
+        <div class="wf-desc">触发条件：Renewal Status 更新为 Approved。自动更新父合同的 Start Date、End Date、Status、Renewal Required 字段，通知 Leasing Staff。</div>
+        <div class="wf-outcome">→ 续租批准即自动延期合同，数据一致性保障</div>
+      </div>
+    </div>
+    <div class="wf-item">
+      <div class="wf-num">WF-7</div>
+      <div class="wf-body">
+        <div class="wf-name">续租拒绝 / 状态变更通知</div>
+        <div class="wf-desc">触发条件：Renewal Status 变更为 Approved 或 Rejected。发送状态变更邮件，拒绝时父合同保持不变，保留经理评论供员工查阅。</div>
+        <div class="wf-outcome">→ 员工第一时间获知续租结果，透明度高</div>
+      </div>
+    </div>
+    <div class="wf-item">
+      <div class="wf-num">WF-8</div>
+      <div class="wf-body">
+        <div class="wf-name">通知租客合同状态变更</div>
+        <div class="wf-desc">触发条件：合同状态变更为 Active / Rejected / Expired。通过邮件模板向租客发送状态更新，包含房产信息、合同期限与当前状态。</div>
+        <div class="wf-outcome">→ 租客始终掌握合同最新状态，体验闭环</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECURITY -->
+<div class="section">
+  <h2 class="sec-title">安全与权限体系</h2>
+  <p class="sec-sub-text">4 角色权限模型，从 OWD（组织默认）开始限制，按业务需要逐层开放，实现最小权限原则。安全设计由队友 Qihao Lin 负责，本人参与测试验证。</p>
+
+  <table class="roles-table">
+    <thead>
+      <tr><th>角色</th><th>Lease Contract</th><th>Property</th><th>Tenant</th><th>Renewal Request</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><div class="role-name">Leasing Staff</div>操作人员</td>
+        <td><span class="perm-chip p-rw">Read</span><span class="perm-chip p-rw">Create</span><span class="perm-chip p-rw">Edit</span></td>
+        <td><span class="perm-chip p-ro">Read Only</span></td>
+        <td><span class="perm-chip p-rw">Read</span><span class="perm-chip p-rw">Create</span><span class="perm-chip p-rw">Edit</span></td>
+        <td><span class="perm-chip p-rw">Read</span><span class="perm-chip p-rw">Create</span><span class="perm-chip p-rw">Edit</span></td>
+      </tr>
+      <tr>
+        <td><div class="role-name">Property Manager</div>房产经理</td>
+        <td><span class="perm-chip p-rev">Review</span><span class="perm-chip p-rev">Edit Status</span></td>
+        <td><span class="perm-chip p-ro">Read Only</span></td>
+        <td><span class="perm-chip p-ro">View Related</span></td>
+        <td><span class="perm-chip p-rev">Review</span><span class="perm-chip p-rev">Edit Status+Comment</span></td>
+      </tr>
+      <tr>
+        <td><div class="role-name">Operations Manager</div>运营总监</td>
+        <td><span class="perm-chip p-rw">Read</span><span class="perm-chip p-rw">Create</span><span class="perm-chip p-rw">Edit</span></td>
+        <td><span class="perm-chip p-rw">Create</span><span class="perm-chip p-rw">Edit</span></td>
+        <td><span class="perm-chip p-rw">Read</span><span class="perm-chip p-rw">Create</span><span class="perm-chip p-rw">Edit</span></td>
+        <td><span class="perm-chip p-rev">Review & Update</span></td>
+      </tr>
+      <tr>
+        <td><div class="role-name">Admin</div>系统管理员</td>
+        <td colspan="4" style="color:var(--text);">全部对象、字段、配置的完整访问权限</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:1.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--faint);margin-bottom:0.5rem;letter-spacing:0.1em;text-transform:uppercase;">OWD 默认设置</div>
+      <div style="font-size:0.82rem;color:var(--muted);"><strong style="color:var(--text);">Lease Contract:</strong> Private</div>
+      <div style="font-size:0.82rem;color:var(--muted);"><strong style="color:var(--text);">Property:</strong> Public Read Only</div>
+      <div style="font-size:0.82rem;color:var(--muted);"><strong style="color:var(--text);">Tenant:</strong> Private</div>
+      <div style="font-size:0.82rem;color:var(--muted);"><strong style="color:var(--text);">Renewal Request:</strong> Controlled by Parent</div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:1rem;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--faint);margin-bottom:0.5rem;letter-spacing:0.1em;text-transform:uppercase;">字段级安全（FLS）</div>
+      <div style="font-size:0.82rem;color:var(--muted);">Leasing Staff 不可自由编辑 <strong style="color:var(--text);">Status</strong> 与 <strong style="color:var(--text);">Approving Manager</strong></div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-top:0.4rem;">续租审批字段（Renewal Status、Processed By、Manager Comment）仅限经理和工作流操作</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREENS -->
+<div class="section">
+  <h2 class="sec-title">系统界面原型</h2>
+  <p class="sec-sub-text">Salesforce Force.com 原型界面展示，涵盖租约合同、租客信息、续租申请三大核心操作界面。</p>
+
+  <div class="screens-grid">
+    <div class="screen-card">
+      <div class="sf-window">
+        <div class="sf-header">
+          <span class="sf-logo">Salesforce</span>
+          <span class="sf-nav-item">Home</span><span class="sf-nav-item">Tenants</span><span class="sf-nav-item" style="color:white;font-weight:600;">Lease Contracts</span><span class="sf-nav-item">Properties</span>
+        </div>
+        <div class="sf-body">
+          <div class="sf-title-bar">
+            <span class="sf-record-name">📄 LC-0001 — new lease contract 2</span>
+            <span class="sf-btn">Submit for Approval</span>
+          </div>
+          <div class="sf-fields">
+            <div class="sf-field-row"><span class="sf-field-label">Status</span><span class="sf-field-val"><span class="sf-badge-active">Active</span></span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Start Date</span><span class="sf-field-val">5/7/2026</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">End Date</span><span class="sf-field-val">5/7/2028</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Weekly Rent</span><span class="sf-field-val">$800</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Property</span><span class="sf-field-val" style="color:#0070d2;">PO-0000</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Tenant</span><span class="sf-field-val" style="color:#0070d2;">T-0000</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Approving Mgr</span><span class="sf-field-val" style="color:#0070d2;">property manager 1</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-caption"><strong>租约合同详情页</strong>合同状态 Active，包含关联房产、租客、审批经理字段，工作流自动填充 Approving Manager。</div>
+    </div>
+
+    <div class="screen-card">
+      <div class="sf-window">
+        <div class="sf-header">
+          <span class="sf-logo">Salesforce</span>
+          <span class="sf-nav-item">Home</span><span class="sf-nav-item" style="color:white;font-weight:600;">Renewal Requests</span><span class="sf-nav-item">Lease Contracts</span>
+        </div>
+        <div class="sf-body">
+          <div class="sf-title-bar">
+            <span class="sf-record-name">🔄 RQ-0003</span>
+            <span class="sf-btn">Submit for Approval</span>
+          </div>
+          <div class="sf-fields">
+            <div class="sf-field-row"><span class="sf-field-label">Renewal Status</span><span class="sf-field-val"><span class="sf-badge-pending">Pending Review</span></span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Lease Contract</span><span class="sf-field-val" style="color:#0070d2;">LC-0000</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Current End</span><span class="sf-field-val">30/9/2026</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Proposed End</span><span class="sf-field-val">31/5/2027</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Processed By</span><span class="sf-field-val" style="color:#0070d2;">property manager 1</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Manager Comment</span><span class="sf-field-val">—</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-caption"><strong>续租申请详情页</strong>WF-5 自动填充当前结束日、Processed By 字段，状态设为 Pending Approval，等待经理审核。</div>
+    </div>
+
+    <div class="screen-card">
+      <div class="sf-window">
+        <div class="sf-header">
+          <span class="sf-logo">Salesforce</span>
+          <span class="sf-nav-item">Home</span><span class="sf-nav-item" style="color:white;font-weight:600;">Tenants</span><span class="sf-nav-item">Lease Contracts</span>
+        </div>
+        <div class="sf-body">
+          <div class="sf-title-bar">
+            <span class="sf-record-name">👤 T-0000 — John Doe</span>
+            <span class="sf-btn">Edit</span>
+          </div>
+          <div class="sf-fields">
+            <div class="sf-field-row"><span class="sf-field-label">Full Name</span><span class="sf-field-val">John Doe</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Email</span><span class="sf-field-val">john@example.com</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Employment</span><span class="sf-field-val">Full-Time</span></div>
+            <div class="sf-field-row"><span class="sf-field-label">ID Verified</span><span class="sf-field-val"><span class="sf-badge-active">Verified</span></span></div>
+            <div class="sf-field-row"><span class="sf-field-label">Lease Count</span><span class="sf-field-val">2 active leases</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-caption"><strong>租客详情页</strong>存储租客联系方式、就业状态、身份验证信息，关联多条租约合同记录。</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRIBUTION + TECH + OUTCOME -->
+<div class="section">
+  <div class="two-col" style="margin-bottom:3rem;">
+    <div>
+      <h2 class="sub-title">我的贡献（100% 独立完成）</h2>
+      <div class="contrib-box">
+        <h4>数据模型模块</h4>
+        <div class="contrib-grid">
+          <div class="contrib-item">4个自定义对象设计</div>
+          <div class="contrib-item">全部字段类型定义</div>
+          <div class="contrib-item">Lookup 关系设计</div>
+          <div class="contrib-item">Master-Detail 关系</div>
+          <div class="contrib-item">7条验证规则编写</div>
+          <div class="contrib-item">合同状态生命周期</div>
+          <div class="contrib-item">Rule 4 — 必填校验</div>
+          <div class="contrib-item">Rule 5 — PM路由校验</div>
+          <div class="contrib-item">系统集成 15%</div>
+          <div class="contrib-item">最终格式审核 50%</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2 class="sub-title">PaaS 开发体验总结</h2>
+      <div class="body-text">
+        <p>本项目最大收获在于理解了 <strong>PaaS 声明式开发的范式转变</strong>：通过配置而非编写代码实现复杂业务逻辑，极大降低技术债务。</p>
+        <p>核心教训：PaaS 并不比传统开发"简单"，只是"不同"——<strong>前期系统建模的严谨程度</strong>（数据模型、访问矩阵、工作流序列）直接决定后期配置质量，错误的 OWD 配置或字段关系同样会产生严重安全漏洞。</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec-title" style="font-size:1.4rem;margin-bottom:1rem;">技术栈</h2>
+  <div class="tech-stack">
+    <span class="tc">Salesforce Force.com</span><span class="tc">Salesforce Flow (Record-Triggered)</span>
+    <span class="tc">Custom Objects & Fields</span><span class="tc">Validation Rules</span>
+    <span class="tc">Lookup Relationships</span><span class="tc">Master-Detail Relationships</span>
+    <span class="tc">Organisation-Wide Defaults</span><span class="tc">Field-Level Security</span>
+    <span class="tc">Role-Based Access Control</span><span class="tc">Email Alerts & Templates</span>
+  </div>
+
+  <h2 class="sec-title" style="font-size:1.4rem;margin-top:3rem;margin-bottom:0.5rem;">项目成果</h2>
+  <div class="outcome-grid">
+    <div class="oc"><div class="oc-num">4</div><div class="oc-label">核心业务对象，全部独立设计</div></div>
+    <div class="oc"><div class="oc-num">7</div><div class="oc-label">条验证规则，零代码数据完整性</div></div>
+    <div class="oc"><div class="oc-num">8</div><div class="oc-label">条 Flow 工作流，覆盖合同全生命周期</div></div>
+    <div class="oc"><div class="oc-num">4</div><div class="oc-label">角色权限体系，最小权限原则落地</div></div>
+  </div>
+</div>
+
+<footer>
+  <span class="ft-copy">© 2026 王珠峰 · Zhufeng Wang</span>
+  <div class="ft-nav">
+    <a href="../index.html">← 返回主页</a>
+    <a href="freshbasket.html">← FreshBasket</a>
+  </div>
+</footer>
+
+</body>
+</html>
