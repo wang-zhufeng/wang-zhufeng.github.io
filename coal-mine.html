@@ -165,11 +165,11 @@ footer{max-width:1080px;margin:0 auto;padding:1.8rem 2.5rem;border-top:1px solid
 </nav>
 
 <div class="proj-hero">
-  <div class="proj-category">数据可视化 · 中兴集团 · 硕士毕业设计</div>
-  <h1 class="proj-title">UGMAS 煤矿气体<br>异常检测与预警系统</h1>
-  <p class="proj-en">Underground Mine Gas Monitoring & Analysis System — TCA/FSV/DMVN Visualization Framework</p>
+  <div class="proj-category">UTS 毕业设计 · 数据来源：中兴集团矿 · 前端大屏 + 后端三分法 独立完成</div>
+  <h1 class="proj-title">UGMAS 煤矿气体<br>监测系统</h1>
+  <p class="proj-en">Underground Mine Gas Monitoring & Analysis System — Based on Wu et al. (2021, 2023) TCA/FSV Framework</p>
   <p class="proj-desc">
-    UTS 42003 工程毕业设计（历时一年），与中兴集团合作。基于真实矿井传感器数据集（12通道 · 5,749时间步），构建「三相关分析（TCA）+ 特征稳定性验证（FSV）+ 动态多变量网络可视化（DMVN）」全链路系统。从继承现有矩阵代码出发，历经三版迭代，最终交付具备<strong>空间定位矿井地图、气泡墙总览、LSTM一小时预测、实时告警</strong>的完整多面板仪表盘。导师：Robert Wu 博士。
+    UTS 42003 工程毕业设计（历时一年），基于 <strong>Wu et al. (2021) 和 Wu et al. (2023)</strong> 两篇学术论文的 TCA/FSV 框架。使用真实中兴矿传感器数据集（12通道 · 5,749时间步），<strong>独立完成前端多面板大屏 UI 与 Python/Flask 后端三分法（TCA）全部实现</strong>，历经三版迭代，最终交付含空间锚定矿井地图、气泡墙总览、LSTM 一小时预测、实时告警的完整 DMVN 仪表盘。导师：Dr. Robert Wu。
   </p>
   <div class="meta-row">
     <div><div class="meta-label">课程</div><div class="meta-val">UTS 42003 Engineering Graduate Project</div></div>
@@ -382,6 +382,26 @@ footer{max-width:1080px;margin:0 auto;padding:1.8rem 2.5rem;border-top:1px solid
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAPER REFERENCES -->
+<div class="section">
+  <h2 class="sec-title">学术基础 — 两篇关键论文</h2>
+  <p class="sec-sub">本项目整体设计基于导师 Dr. Robert Wu 团队的两篇同行评审论文，TCA 算法框架、五级相关强度量表、FSV 稳定性验证方法均直接来源于此。</p>
+  <div class="two-col">
+    <div style="background:var(--bg2);border:1px solid rgba(240,169,64,0.25);border-left:3px solid var(--amber);border-radius:8px;padding:1.5rem;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.6rem;">核心论文 · 2021</div>
+      <div style="font-size:0.9rem;font-weight:500;color:var(--text);margin-bottom:0.5rem;line-height:1.4;">A correlational research on developing an innovative integrated gas warning system: A case study in ZhongXing, China</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.8rem;">Wu, R. M. X. et al. (2021) · <em>Geomatics, Natural Hazards and Risk</em>, 12(1), 3175–3204</div>
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.7;font-weight:300;"><strong style="color:var(--text);">本项目直接使用：</strong>ZhongXing 矿真实数据集（49传感器 / 320万条读数）；TCA 三元组相关系数计算方法；五级强度量表（Great/Very Good/Good/Fair/Poor）；α=.01 显著性阈值；328条强相关性实证分布作为系统结果对标基准。</div>
+    </div>
+    <div style="background:var(--bg2);border:1px solid rgba(240,169,64,0.25);border-left:3px solid var(--amber);border-radius:8px;padding:1.5rem;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.6rem;">核心论文 · 2023</div>
+      <div style="font-size:0.9rem;font-weight:500;color:var(--text);margin-bottom:0.5rem;line-height:1.4;">An FSV analysis approach to verify the robustness of the triple-correlation analysis theoretical framework</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.8rem;">Wu, R. M. X. et al. (2023) · <em>Scientific Reports</em>, 13, 9621</div>
+      <div style="font-size:0.82rem;color:var(--muted);line-height:1.7;font-weight:300;"><strong style="color:var(--text);">本项目直接使用：</strong>FSV 30次 Bootstrap ±5% 漂移门控方法；跨矿面和季节的稳健性验证方案；数据预处理对 TCA 稳定性的影响实证——直接对应系统 FSV 模块的 69.4% 三元组存活率结果。</div>
     </div>
   </div>
 </div>

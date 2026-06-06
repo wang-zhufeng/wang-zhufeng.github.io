@@ -439,68 +439,74 @@ footer{
   </div>
   <div class="proj-grid">
 
+    <!-- 1. UGMAS — 最高价值：毕业设计+企业数据+独立全栈+论文支撑 -->
+    <div class="proj" onclick="location.href='coal-mine.html'">
+      <div class="proj-accent acc-amber"></div>
+      <div class="proj-tag tag-amber">毕业设计 · 数据来源：中兴集团矿 · 独立全栈</div>
+      <div class="proj-title">UGMAS 煤矿气体监测系统</div>
+      <div class="proj-desc">UTS 毕业设计（一年），独立完成前端大屏 UI 与 Python/Flask 后端三分法实现。基于 Wu et al.(2021/2023) TCA/FSV 学术框架，历经三版迭代，最终交付含矿井空间地图、气泡墙、LSTM 预测的完整多面板 DMVN 仪表盘。</div>
+      <div class="chips">
+        <span class="chip">Vue3</span><span class="chip">D3.js</span><span class="chip">Flask</span><span class="chip">TCA/FSV</span><span class="chip">DMVN</span><span class="chip">LSTM</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+
+    <!-- 2. RAG — AI 核心方向，全链路工程 -->
+    <div class="proj" onclick="location.href='rag-system.html'">
+      <div class="proj-accent acc-green"></div>
+      <div class="proj-tag tag-green">AI 工程 · 个人项目 · RAG 全链路</div>
+      <div class="proj-title">多模态 RAG 文档问答系统</div>
+      <div class="proj-desc">支持 PDF / Markdown / 图片多源，搭建「离线建索引 → 混合检索 → Rerank → 生成 → RAGAS 评测」完整管道。BM25 + 稠密向量混合，Hit@3 达 0.87，OCR / VLM 处理图文混排。</div>
+      <div class="chips">
+        <span class="chip">Python</span><span class="chip">LangChain</span><span class="chip">Chroma</span><span class="chip">BM25</span><span class="chip">RAGAS</span><span class="chip">OCR/VLM</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+
+    <!-- 3. FreshBasket — 独立完成，生产级 AWS -->
+    <div class="proj" onclick="location.href='freshbasket.html'">
+      <div class="proj-accent acc-blue"></div>
+      <div class="proj-tag tag-blue">云计算 · AWS · 个人独立完成</div>
+      <div class="proj-title">FreshBasket 高可用云架构</div>
+      <div class="proj-desc">独立完成生产级 AWS 多层架构：自定义 VPC、ALB、Auto Scaling（2–8实例）、RDS MySQL Multi-AZ 热备、Elastic Beanstalk 编排，CloudWatch 告警 + SNS 通知，11+ 核心组件完整部署。</div>
+      <div class="chips">
+        <span class="chip">AWS</span><span class="chip">Elastic Beanstalk</span><span class="chip">RDS Multi-AZ</span><span class="chip">Flask</span><span class="chip">ALB</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </div>
+
+    <!-- 4. UTS Library — 独立 UI，导师团队 -->
     <div class="proj" onclick="location.href='uts-library.html'">
       <div class="proj-accent acc-purple"></div>
-      <div class="proj-tag tag-purple">数据可视化 · UTS 导师团队</div>
+      <div class="proj-tag tag-purple">数据可视化 · UTS 导师团队 · 独立 UI</div>
       <div class="proj-title">UTS 图书馆数据监控大屏</div>
       <div class="proj-desc">独立负责 Building 1 监控大屏全部 UI 设计与前端实现，将人流量、座位占用率、图书状态等多模块数据转化为实时可视化看板，提升场馆运营可观测性。</div>
       <div class="chips">
-        <span class="chip">前端 UI</span><span class="chip">数据可视化</span><span class="chip">实时更新</span><span class="chip">多模块布局</span>
+        <span class="chip">前端 UI</span><span class="chip">数据可视化</span><span class="chip">实时刷新</span><span class="chip">多模块布局</span>
       </div>
       <span class="proj-arrow">↗</span>
     </div>
 
-    <div class="proj" onclick="location.href='rag-system.html'">
-      <div class="proj-accent acc-green"></div>
-      <div class="proj-tag tag-green">AI · 个人项目</div>
-      <div class="proj-title">多模态 RAG 文档问答系统</div>
-      <div class="proj-desc">支持 PDF / Markdown / 图片多源知识，搭建「离线建索引 → 在线检索 → 效果评测」全链路。BM25 + 稠密向量混合检索 + Rerank 精排，RAGAS / Hit@k / MRR 量化评测。</div>
-      <div class="chips">
-        <span class="chip">Python</span><span class="chip">LangChain</span><span class="chip">Chroma</span><span class="chip">BM25</span><span class="chip">RAGAS</span>
-      </div>
-      <span class="proj-arrow">↗</span>
-    </div>
-
-    <div class="proj" onclick="location.href='coal-mine.html'">
-      <div class="proj-accent acc-amber"></div>
-      <div class="proj-tag tag-amber">数据可视化 · 中兴集团</div>
-      <div class="proj-title">煤矿气体异常检测与预警系统</div>
-      <div class="proj-desc">基于 Vue3 + ECharts 构建多图表联动实时监测大屏，实现多源传感器数据动态刷新；参与「三分法」异常检测算法逻辑梳理与阈值优化，已在测试环境部署。</div>
-      <div class="chips">
-        <span class="chip">Vue3</span><span class="chip">ECharts</span><span class="chip">Flask</span><span class="chip">Python</span>
-      </div>
-      <span class="proj-arrow">↗</span>
-    </div>
-
-    <div class="proj" onclick="location.href='freshbasket.html'">
-      <div class="proj-accent acc-blue"></div>
-      <div class="proj-tag tag-blue">云计算 · AWS · 独立完成</div>
-      <div class="proj-title">FreshBasket 高可用云架构</div>
-      <div class="proj-desc">在 AWS 完整搭建生产级多层架构：自定义 VPC、ALB、Auto Scaling（2–8实例）、RDS MySQL Multi-AZ 热备、Elastic Beanstalk 编排，CloudWatch 告警 + SNS 通知。</div>
-      <div class="chips">
-        <span class="chip">AWS</span><span class="chip">Elastic Beanstalk</span><span class="chip">RDS Multi-AZ</span><span class="chip">Flask</span>
-      </div>
-      <span class="proj-arrow">↗</span>
-    </div>
-
+    <!-- 5. Carbon Footprint — 全栈完整交付，有源码 -->
     <div class="proj" onclick="location.href='carbon.html'">
       <div class="proj-accent acc-green"></div>
-      <div class="proj-tag tag-green">全栈开发 · .NET</div>
+      <div class="proj-tag tag-green">全栈开发 · ASP.NET Core · 前端100%独立</div>
       <div class="proj-title">Carbon Footprint Web</div>
-      <div class="proj-desc">ASP.NET Core MVC 全栈交付，五页面完整应用。Chart.js 12个月趋势图 + 出行模式环图、CSV 导出、Badge 激励系统、EF Core + SQLite 持久化，Cookie 用户认证。</div>
+      <div class="proj-desc">五页面完整 Web 应用，本人独立负责全部前端 + 核心后端逻辑。Chart.js 12个月趋势图 + 出行模式分布、CSV 导出、Badge 激励、EF Core + SQLite、Cookie 认证与用户数据隔离。</div>
       <div class="chips">
-        <span class="chip">ASP.NET Core</span><span class="chip">C#</span><span class="chip">EF Core</span><span class="chip">Chart.js</span>
+        <span class="chip">ASP.NET Core</span><span class="chip">C#</span><span class="chip">EF Core</span><span class="chip">Chart.js</span><span class="chip">SQLite</span>
       </div>
       <span class="proj-arrow">↗</span>
     </div>
 
+    <!-- 6. LeaseFlow — PaaS 企业级 -->
     <div class="proj" onclick="location.href='leaseflow.html'">
       <div class="proj-accent acc-blue"></div>
-      <div class="proj-tag tag-blue">PaaS · Salesforce · 数据模型100%独立</div>
+      <div class="proj-tag tag-blue">企业级 PaaS · Salesforce · 数据模型100%独立</div>
       <div class="proj-title">LeaseFlow 租赁合同管理系统</div>
-      <div class="proj-desc">Force.com 上设计完整数据模型，7条验证规则，8条 Flow 自动化工作流覆盖合同全生命周期，4角色权限体系 + 字段级安全策略 + OWD 组织默认设置。</div>
+      <div class="proj-desc">Force.com 企业 PaaS 平台，独立设计完整数据模型（4对象 · 7条验证规则），配合队友完成 8 条 Flow 自动化工作流覆盖租约全生命周期，4 角色权限体系 + OWD 安全策略。</div>
       <div class="chips">
-        <span class="chip">Salesforce</span><span class="chip">Force.com</span><span class="chip">Flow</span><span class="chip">RBAC</span>
+        <span class="chip">Salesforce</span><span class="chip">Force.com</span><span class="chip">Flow 自动化</span><span class="chip">RBAC</span>
       </div>
       <span class="proj-arrow">↗</span>
     </div>
@@ -558,7 +564,7 @@ footer{
       <div class="about-body">
         <p>来自河南许昌，<strong>悉尼科技大学（QS 88）软件系统工程硕士 2026 届</strong>，当前成绩 High Distinction（均分 85+）。全英文授课项目，雅思 6.5，可无障碍阅读英文技术文档，具备跨团队英文协作经验。</p>
         <p>本科就读于兰州理工大学软件工程专业，<strong>GPA 排名 11/151</strong>，持有<strong>国家发明专利</strong>一项（CN201721739406）。</p>
-        <p>深度使用 Obsidian + Claude 搭建个人知识库与 AI 辅助工作流，具备较强的 AI 原生工作习惯。求职意向：AI 应用开发 / 数据可视化工程师 / 全栈开发，可调动。</p>
+        <p>硕士期间在 <strong>10 个月内同步推进 6 门课程与 5 个大项目</strong>（毕业设计贯穿全年），涵盖 AI 工程、云计算、全栈开发、数据可视化四个方向，具备较强的多线并行交付能力。深度使用 Obsidian + Claude 搭建 AI 辅助工作流，是整个多线并行得以落地的关键。求职意向：AI 应用开发 / 数据可视化工程师 / 全栈开发，可调动。</p>
       </div>
     </div>
     <div>
